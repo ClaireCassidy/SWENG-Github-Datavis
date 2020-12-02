@@ -1,14 +1,23 @@
 require('dotenv').config({path: __dirname + '/.env'})
 
 const express = require('express');
-
 const path = require('path');
+const axios = require('axios');
 
 const app = express();
 
 // a test route to make sure we can reach the backend
 //this would normally go in a routes file
 app.get('/test', (req, res) => {
+
+    axios.get('https://api.github.com/search/users?q=esjmb', {
+        'headers': {
+            'Authorization': `token ${process.env.PAT}` 
+        }
+    }).then(response => {
+        console.log(response.data);
+    })
+
     res.send('Welcome to the backend!')
 })
 
