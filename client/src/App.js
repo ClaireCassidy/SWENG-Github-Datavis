@@ -26,14 +26,45 @@ function App() {
   };
 
   const submitUserRequest = () => {
-    if (username != "") {
+    if (username !== "") {
+
       axios
         .get(`https://api.github.com/search/users?q=${username}`)
         .then((response) => {
           console.log(response.data);
+          const reposUrl = response.data.items[0].repos_url;
+          console.log(reposUrl);
+
+          if (reposUrl) logSizeRepos(username, reposUrl);
+        })
+        .catch((error) => {
+          console.log(error.response);
         });
+
     } else console.log("Invalid username submitted");
   };
+
+  const logSizeRepos = (username, url) => {
+    console.log(`${username}:${url}`)
+    axios
+      .get(`${url}`)
+      .then((res) => {
+        console.log(res.data);
+        let total_size_kbs = 0;
+        
+        let repos = res.data;
+        console.log(repos);
+        repos.map(repo => {
+          console.log(`Repo name: ${username}\nRepo Size (KBs): ${repo.size}`);
+          total_size_kbs += repo.size;
+        });
+
+        console.log(`Total size of ${username}'s repos: ${total_size_kbs} KBs`);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <>
@@ -62,3 +93,4 @@ function App() {
 }
 
 export default App;
+

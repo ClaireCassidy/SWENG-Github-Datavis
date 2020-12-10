@@ -9,7 +9,6 @@ const app = express();
 // a test route to make sure we can reach the backend
 //this would normally go in a routes file
 app.get("/test", (req, res) => {
-  for (let i = 0; i < 100; i++) {
     axios
       .get("https://api.github.com/search/users", {
         headers: {
@@ -22,7 +21,6 @@ app.get("/test", (req, res) => {
       .catch((error) => {
         console.log(error.response);
       });
-  }
 
   res.send("Welcome to the backend!");
 });
