@@ -86,6 +86,22 @@ function App() {
       })
   }
 
+  const helloFromUserToServer = () => {
+    if (username) {
+      axios
+      .get(`/user/${username}`)
+      .then((res) => {
+        setServerResponses((serverResponses) => [
+          ...serverResponses,
+          res.data,
+        ]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    }
+  }
+
   return (
     <>
       <h1>Hello World!</h1>
@@ -99,6 +115,7 @@ function App() {
         }}
       />
       <button onClick={submitUserRequest}>Submit</button>
+      <button onClick={helloFromUserToServer}>Greet Server</button>
       <p>{username}</p>
       {serverResponses.map((response, index) => {
         return (
