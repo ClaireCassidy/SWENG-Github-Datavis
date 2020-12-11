@@ -1,12 +1,16 @@
 const axios = require('axios');
 const express = require('express');
-const router = express.Router();
+const userRouter = express.Router();
 
-router.get('/', (req, res) => {
+userRouter.get('/', (req, res) => {
     res.send("Hello world");
 })
+
+// const sizeRouter = require('./size');
+// userRouter.use('/:username/size', sizeRouter);
+
 // get a user
-router.get('/:username', async (req, res) => {
+userRouter.get('/:username', async (req, res) => {
     const greeting = `Got it! Hello ${req.params.username}`;
 
     try {
@@ -38,6 +42,11 @@ router.get('/:username', async (req, res) => {
     //res.json(responseBody)
 });
 
+// get size
+userRouter.get('/:username/size', (req, res) => {
+    res.send("Working");
+})
+
 // query github api for user
 async function getUserData(username) {
     try {
@@ -54,4 +63,4 @@ async function getUserData(username) {
     }
 }
 
-module.exports = router;
+module.exports = userRouter;

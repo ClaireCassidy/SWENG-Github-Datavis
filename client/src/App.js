@@ -85,7 +85,7 @@ function App() {
       })
   }
 
-  const helloFromUserToServer = () => {
+  const getRepoSize = () => {
     if (username) {
       axios
       .get(`/user/${username}`)
@@ -102,6 +102,12 @@ function App() {
     }
   }
 
+  const getRepoLanguages = () => {
+    if (username) {
+      
+    }
+   }
+
   return (
     <>
       <h1>Hello World!</h1>
@@ -115,7 +121,9 @@ function App() {
         }}
       />
       <button onClick={submitUserRequest}>Submit</button>
-      <button onClick={helloFromUserToServer}>Greet Server</button>
+      <button onClick={getRepoSize}>Get Size</button>
+      <button onClick={getRepoLanguages}>Get Languages</button>
+
       <p>{username}</p>
       {serverResponses.map((response, index) => {
         return (
