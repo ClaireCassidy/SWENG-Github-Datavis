@@ -41,7 +41,11 @@ router.get('/:username', async (req, res) => {
 // query github api for user
 async function getUserData(username) {
     try {
-        const res = await axios.get(`https://api.github.com/search/users?q=${username}`);
+        const res = await axios.get(`https://api.github.com/search/users?q=${username}`, {
+            'headers': {
+                'Authorization': `token ${process.env.PAT}` 
+            }
+        });
         //return response.items[0].login+":"+response.items[0].id;
         console.log(res.data);
         return res.data;
