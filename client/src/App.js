@@ -32,10 +32,18 @@ function App() {
         .get(`https://api.github.com/search/users?q=${username}`)
         .then((response) => {
           console.log(response.data);
+          
           const reposUrl = response.data.items[0].repos_url;
+          const languagesUrl = response.data.items[0].languages_url;
           console.log(reposUrl);
+          console.log(languagesUrl);
 
-          if (reposUrl) logSizeRepos(username, reposUrl);
+          if (reposUrl) { 
+            // print the size of the repository
+            logSizeRepos(username, reposUrl);
+            // print bytes of code by language
+            logBreakdownByLanguage(username, languagesUrl);
+          }
         })
         .catch((error) => {
           console.log(error.response);
@@ -54,16 +62,28 @@ function App() {
         
         let repos = res.data;
         console.log(repos);
-        repos.map(repo => {
-          console.log(`Repo name: ${username}\nRepo Size (KBs): ${repo.size}`);
+        repos.forEach(repo => {
+          console.log(`Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`);
           total_size_kbs += repo.size;
         });
 
-        console.log(`Total size of ${username}'s repos: ${total_size_kbs} KBs`);
+        console.log(`Total size of ${username}'s public repos: ${total_size_kbs} KBs`);
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  const logBreakdownByLanguage = (username, url) => {
+    console.log(`${username}:${url}`)
+
+    axios
+      .get(`${url}`)
+      .then((res) => {
+        console.log(res.data)
+
+        let languageSizes = res.data;
+      })
   }
 
   return (
