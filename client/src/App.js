@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 
 function App() {
-  console.log("Log");
 
   const [serverResponses, setServerResponses] = useState([]);
   const [username, setUsername] = useState("");
@@ -91,6 +90,7 @@ function App() {
       axios
       .get(`/user/${username}`)
       .then((res) => {
+        console.log(res);
         setServerResponses((serverResponses) => [
           ...serverResponses,
           res.data,
@@ -121,7 +121,7 @@ function App() {
         return (
           <>
             <p>{index}</p>
-            <p>{response}</p>
+            <p>{JSON.stringify(response)}</p>
           </>
         );
       })}
