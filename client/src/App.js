@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function App() {
   const [serverResponses, setServerResponses] = useState([]);
@@ -121,7 +121,7 @@ function App() {
         Enter a username and retrieve information on the user's public
         repositories and their sizes:
       </p>
-      <button onClick={hitBackend}>Contact Backend</button>
+      <button onClick={hitBackend} style={{marginRight : "20px"}}>Contact Backend</button>
       <input
         type="text"
         value={username}
@@ -132,7 +132,7 @@ function App() {
       <button onClick={submitUserRequest}>Render Raw User Info</button>
       <button onClick={getUserRepos}>Get Raw Repo Info</button>
       <button onClick={getUserRepoSizes}>Get Repo Sizes</button>
-      <button onClick={clearResponses}>Clear Responses</button>
+      <button onClick={clearResponses} style={{marginLeft : "20px"}}>Clear Responses</button>
 
       {username ? <p>Looking for: {username}</p> : <></>}
       {loading ? <p>Loading ...</p> : <></>}
