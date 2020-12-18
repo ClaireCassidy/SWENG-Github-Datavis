@@ -92,7 +92,7 @@ function App() {
   const getRepoLanguages = () => {
     if (username) {
       axios
-        .get(`/user/${username}/size`)
+        .get(`/user/${username}/repo`)
         .then((res) => {
           console.log(res);
         })
@@ -105,7 +105,7 @@ function App() {
     whiteSpace: 'pre-wrap'
   };
 
-  const sizeTest = () => {
+  const getUserRepos = () => {
     if (username) {
       axios
         .get(`/user/${username}/size`)
@@ -122,6 +122,10 @@ function App() {
     }
   }
 
+  const clearResponses = () => {
+    setServerResponses((serverResponses) => []);
+  }
+
   return (
     <>
       <h1>Github API Access Demo</h1>
@@ -136,7 +140,8 @@ function App() {
       />
       <button onClick={submitUserRequest}>Render Raw Info</button>
       <button onClick={getUserRepoSizes}>Get Size</button>
-      <button onClick={sizeTest}>Test Size</button>
+      <button onClick={getUserRepos}>Get Raw Repo Info</button>
+      <button onClick={clearResponses}>Clear Responses</button>
 
       {username ? <p>Looking for: {username}</p> : <></>}
 
