@@ -2,7 +2,6 @@ import axios from "axios";
 import { useState } from "react";
 
 function App() {
-
   const [serverResponses, setServerResponses] = useState([]);
   const [username, setUsername] = useState("");
 
@@ -16,50 +15,27 @@ function App() {
     });
   };
 
-  const getUserRepoSizes = () => {
-    if (username !== "") {
-
-      axios
-        .get(`https://api.github.com/search/users?q=${username}`)
-        .then((response) => {
-          console.log(response.data);
-          
-          const reposUrl = response.data.items[0].repos_url;
-          const languagesUrl = response.data.items[0].languages_url;
-          console.log(reposUrl);
-          console.log(languagesUrl);
-
-          if (reposUrl) { 
-            // print the size of the repository
-            logSizeRepos(username, reposUrl);
-          }
-        })
-        .catch((error) => {
-          console.log(error.response);
-        });
-
-    } else console.log("Invalid username submitted");
-  };
-
   const logSizeRepos = (username, url) => {
-    console.log(`${username}:${url}`)
+    console.log(`${username}:${url}`);
     axios
       .get(`${url}`)
       .then((res) => {
         console.log(res.data);
         let total_size_kbs = 0;
 
-        let serverResponseItem = `Showing Repo Sizes for "${username}":\n\n`; 
-        
+        let serverResponseItem = `Showing Repo Sizes for "${username}":\n\n`;
+
         let repos = res.data;
         console.log(repos);
-        repos.forEach(repo => {
+        repos.forEach((repo) => {
           console.log(`Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`);
           serverResponseItem += `\nRepo name: ${repo.name}\n\tRepo Size (KBs): ${repo.size}`;
           total_size_kbs += repo.size;
         });
 
-        console.log(`Total size of ${username}'s public repos: ${total_size_kbs} KBs`);
+        console.log(
+          `Total size of ${username}'s public repos: ${total_size_kbs} KBs`
+        );
         serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
 
         setServerResponses((serverResponses) => [
@@ -70,45 +46,48 @@ function App() {
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
+
+  const getRepoLanguages = () => {
+    if (username) {
+      axios.get(`/user/${username}/repo`).then((res) => {
+        console.log(res);
+      });
+    }
+  };
+
+
+  // -----
+
+  const newLineStyle = {
+    whiteSpace: "pre-wrap",
+  };
+
+  const clearResponses = () => {
+    setServerResponses((serverResponses) => []);
+  };
 
   const submitUserRequest = () => {
     if (username) {
       axios
-      .get(`/user/${username}`)
-      .then((res) => {
-        console.log(res);
-        setServerResponses((serverResponses) => [
-          ...serverResponses,
-          res.data.items[0],
-        ]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    }
-  }
-
-  const getRepoLanguages = () => {
-    if (username) {
-      axios
-        .get(`/user/${username}/repo`)
+        .get(`/user/${username}`)
         .then((res) => {
           console.log(res);
+          setServerResponses((serverResponses) => [
+            ...serverResponses,
+            res.data.items[0],
+          ]);
         })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-   }
-
-  const newLineStyle = {
-    // color: 'red',
-    // fontSize: 200
-    whiteSpace: 'pre-wrap'
   };
 
   const getUserRepos = () => {
     if (username) {
       axios
-        .get(`/user/${username}/size`)
+        .get(`/user/${username}/repo`)
         .then((res) => {
           console.log(res.data);
           setServerResponses((serverResponses) => [
@@ -120,16 +99,52 @@ function App() {
           console.log(error);
         });
     }
-  }
+  };
 
-  const clearResponses = () => {
-    setServerResponses((serverResponses) => []);
-  }
+  const getUserRepoSizes = () => {
+    if (username) {
+      axios
+        .get(`/user/${username}/repo`)
+        .then((response) => {
+          // response an array of objects for each repo
+          let total_size_kbs = 0;
+
+          let serverResponseItem = `Showing Repo Sizes for "${username}":\n\n`;
+
+          let repos = response.data;
+          console.log(repos);
+
+          repos.forEach((repo) => {
+            console.log(
+              `Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`
+            );
+            serverResponseItem += `\nRepo name: ${repo.name}\n\tRepo Size (KBs): ${repo.size}`;
+            total_size_kbs += repo.size;
+          });
+
+          console.log(
+            `Total size of ${username}'s public repos: ${total_size_kbs} KBs`
+          );
+          serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
+  
+          setServerResponses((serverResponses) => [
+            ...serverResponses,
+            serverResponseItem,
+          ]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else console.log("Invalid username submitted");
+  };
 
   return (
     <>
       <h1>Github API Access Demo</h1>
-      <p>Enter a username and retrieve information on the user's public repositories and their sizes:</p>
+      <p>
+        Enter a username and retrieve information on the user's public
+        repositories and their sizes:
+      </p>
       <button onClick={hitBackend}>Contact Backend</button>
       <input
         type="text"
@@ -138,9 +153,9 @@ function App() {
           setUsername(e.target.value);
         }}
       />
-      <button onClick={submitUserRequest}>Render Raw Info</button>
-      <button onClick={getUserRepoSizes}>Get Size</button>
+      <button onClick={submitUserRequest}>Render Raw User Info</button>
       <button onClick={getUserRepos}>Get Raw Repo Info</button>
+      <button onClick={getUserRepoSizes}>Get Repo Sizes</button>
       <button onClick={clearResponses}>Clear Responses</button>
 
       {username ? <p>Looking for: {username}</p> : <></>}
@@ -148,12 +163,17 @@ function App() {
       {serverResponses.map((response, index) => {
         return (
           <div key={index}>
-            <hr/>
+            <hr />
             <p>{index}</p>
-            {typeof response === 'object' ?
-              <div><pre>{JSON.stringify(response, null, 2) }</pre></div>
-              : <p id={index} style={newLineStyle}>{response}</p>}
-
+            {typeof response === "object" ? (
+              <div>
+                <pre>{JSON.stringify(response, null, 2)}</pre>
+              </div>
+            ) : (
+              <p id={index} style={newLineStyle}>
+                {response}
+              </p>
+            )}
           </div>
         );
       })}
@@ -162,4 +182,3 @@ function App() {
 }
 
 export default App;
-

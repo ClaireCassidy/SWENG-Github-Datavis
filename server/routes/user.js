@@ -43,8 +43,8 @@ userRouter.get("/:username", async (req, res) => {
   //res.json(responseBody)
 });
 
-// get size
-userRouter.get("/:username/size", async (req, res) => {
+// get username's public repos
+userRouter.get("/:username/repo", async (req, res) => {
   //res.send("Working");
   try {
     const userResponseBody = await getUserData(req.params.username);
@@ -84,6 +84,8 @@ async function getUserData(username) {
   }
 }
 
+// makes a request for a repo based on a url obtained 
+//  by querying API for a username 
 async function getRepoData(repoUrl) {
     try {
         const res = await axios.get(
