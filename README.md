@@ -16,6 +16,8 @@ Before attempting to send requests to the server, the user should navigate to th
 
 In this file, one should add the line ``PAT=[your_github_access_token_here]``. One can also specify a different port for the server to run instead of 8080 on by adding ``PORT=[preferred_port]``.
 
+Finally, dependencies should be installed by running ``npm install`` in the top-level folder and within the ``client`` folder.
+
 Both the server and the client need to be launched simulataneously to be able to communicate. To launch the client, navigate to ``client`` folder and enter the command ``npm run start``. To run the server, navigate to the top-level folder and enter the command ``npm run server``.
 
 ## Using the App
