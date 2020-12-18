@@ -23,7 +23,7 @@ app.get("/test", (req, res) => {
     //     console.log(error.response);
     //   });
 
-  res.send("Welcome to the backend!");
+  res.send("Backend says hello!");
 });
 
 const usersRouter = require('./routes/user');

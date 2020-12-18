@@ -1,19 +1,20 @@
-const axios = require('axios');
-const express = require('express');
+const axios = require("axios");
+const { response } = require("express");
+const express = require("express");
 const userRouter = express.Router();
 
-userRouter.get('/', (req, res) => {
-    res.send("Hello world");
-})
+userRouter.get("/", (req, res) => {
+  res.send("Hello world");
+});
 
 // const sizeRouter = require('./size');
 // userRouter.use('/:username/size', sizeRouter);
 
 // get a user
-userRouter.get('/:username', async (req, res) => {
-    const greeting = `Got it! Hello ${req.params.username}`;
+userRouter.get("/:username", async (req, res) => {
+  const greeting = `Got it! Hello ${req.params.username}`;
 
-    try {
+  try {
     // let responseBody = null;
 
     // axios
@@ -28,39 +29,66 @@ userRouter.get('/:username', async (req, res) => {
     // });
 
     const responseBody = await getUserData(req.params.username);
-    console.log(typeof responseBody)
+    console.log(typeof responseBody);
     if (responseBody) {
-        res.send(responseBody);
+      res.send(responseBody);
     } else {
-        res.send("Error");
+      res.send("Error");
     }
-} catch (err) {
+  } catch (err) {
     console.log(err);
-}
-    // res.send(greeting+"\n"+JSON.stringify(responseBody));
-    //res.json({"name":`${req.params.username}`});
-    //res.json(responseBody)
+  }
+  // res.send(greeting+"\n"+JSON.stringify(responseBody));
+  //res.json({"name":`${req.params.username}`});
+  //res.json(responseBody)
 });
 
 // get size
-userRouter.get('/:username/size', (req, res) => {
-    res.send("Working");
-})
+userRouter.get("/:username/size", async (req, res) => {
+  //res.send("Working");
+  try {
+    const userResponseBody = await getUserData(req.params.username);
+    console.log("FROM ROUTE: \n\n" + JSON.stringify(userResponseBody));
+
+    if (userResponseBody) {
+        const repoUrl = userResponseBody.items[0].repos_url;
+        console.log(repoUrl);
+
+        const repoResponseBody = await getRepoData(repoUrl);
+        res.send(userResponseBody);
+    } else {
+        res.send("Error");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 // query github api for user
 async function getUserData(username) {
-    try {
-        const res = await axios.get(`https://api.github.com/search/users?q=${username}`, {
-            'headers': {
-                'Authorization': `token ${process.env.PAT}` 
-            }
-        });
-        //return response.items[0].login+":"+response.items[0].id;
-        console.log(res.data);
-        return res.data;
-    } catch (err) {
-        console.log(err);
-    }
+  try {
+    const res = await axios.get(
+      `https://api.github.com/search/users?q=${username}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.PAT}`,
+        },
+      }
+    );
+    //return response.items[0].login+":"+response.items[0].id;
+    console.log("FROM FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function getRepoData(repoUrl) {
+
+} 
+
+const processSize = (responseBody) => {
+    
 }
 
 module.exports = userRouter;

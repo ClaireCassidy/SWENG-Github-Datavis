@@ -16,15 +16,7 @@ function App() {
     });
   };
 
-  const stockRequest = () => {
-    axios
-      .get("https://api.github.com/search/users?q=esjmb")
-      .then((response) => {
-        console.log(response.data);
-      });
-  };
-
-  const submitUserRequest = () => {
+  const getUserRepoSizes = () => {
     if (username !== "") {
 
       axios
@@ -40,8 +32,6 @@ function App() {
           if (reposUrl) { 
             // print the size of the repository
             logSizeRepos(username, reposUrl);
-            // print bytes of code by language
-            logBreakdownByLanguage(username, languagesUrl);
           }
         })
         .catch((error) => {
@@ -82,19 +72,7 @@ function App() {
       });
   }
 
-  const logBreakdownByLanguage = (username, url) => {
-    console.log(`${username}:${url}`)
-
-    axios
-      .get(`${url}`)
-      .then((res) => {
-        console.log(res.data)
-
-        let languageSizes = res.data;
-      })
-  }
-
-  const getRepoSize = () => {
+  const submitUserRequest = () => {
     if (username) {
       axios
       .get(`/user/${username}`)
@@ -102,7 +80,7 @@ function App() {
         console.log(res);
         setServerResponses((serverResponses) => [
           ...serverResponses,
-          res.data,
+          res.data.items[0],
         ]);
       })
       .catch((error) => {
@@ -127,11 +105,28 @@ function App() {
     whiteSpace: 'pre-wrap'
   };
 
+  const sizeTest = () => {
+    if (username) {
+      axios
+        .get(`/user/${username}/size`)
+        .then((res) => {
+          console.log(res.data);
+          setServerResponses((serverResponses) => [
+            ...serverResponses,
+            res.data,
+          ]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
+
   return (
     <>
-      <h1>Hello World!</h1>
-      <button onClick={hitBackend}>Send request</button>
-      <button onClick={stockRequest}>Log Stephen's info</button>
+      <h1>Github API Access Demo</h1>
+      <p>Enter a username and retrieve information on the user's public repositories and their sizes:</p>
+      <button onClick={hitBackend}>Contact Backend</button>
       <input
         type="text"
         value={username}
@@ -139,22 +134,22 @@ function App() {
           setUsername(e.target.value);
         }}
       />
-      <button onClick={submitUserRequest}>Submit</button>
-      <button onClick={getRepoSize}>Get Size</button>
-      <button onClick={getRepoLanguages}>Get Languages</button>
+      <button onClick={submitUserRequest}>Render Raw Info</button>
+      <button onClick={getUserRepoSizes}>Get Size</button>
+      <button onClick={sizeTest}>Test Size</button>
 
-      <p>{username}</p>
+      {username ? <p>Looking for: {username}</p> : <></>}
 
       {serverResponses.map((response, index) => {
         return (
-          <>
+          <div key={index}>
             <hr/>
             <p>{index}</p>
             {typeof response === 'object' ?
-              <p id={index}>{JSON.stringify(response)}</p> 
+              <div><pre>{JSON.stringify(response, null, 2) }</pre></div>
               : <p id={index} style={newLineStyle}>{response}</p>}
 
-          </>
+          </div>
         );
       })}
     </>
