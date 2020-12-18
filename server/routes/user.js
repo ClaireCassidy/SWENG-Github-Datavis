@@ -55,7 +55,8 @@ userRouter.get("/:username/size", async (req, res) => {
         console.log(repoUrl);
 
         const repoResponseBody = await getRepoData(repoUrl);
-        res.send(userResponseBody);
+
+        res.send(repoResponseBody);
     } else {
         res.send("Error");
     }
@@ -76,7 +77,7 @@ async function getUserData(username) {
       }
     );
     //return response.items[0].login+":"+response.items[0].id;
-    console.log("FROM FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
+    console.log("FROM USER FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
     return res.data;
   } catch (err) {
     console.log(err);
@@ -84,7 +85,21 @@ async function getUserData(username) {
 }
 
 async function getRepoData(repoUrl) {
-
+    try {
+        const res = await axios.get(
+          `${repoUrl}`,
+          {
+            headers: {
+              Authorization: `token ${process.env.PAT}`,
+            },
+          }
+        );
+        //return response.items[0].login+":"+response.items[0].id;
+        console.log("FROM REPO FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
+        return res.data;
+      } catch (err) {
+        console.log(err);
+      }
 } 
 
 const processSize = (responseBody) => {
