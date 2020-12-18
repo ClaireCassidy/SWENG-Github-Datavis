@@ -34,10 +34,17 @@ function App() {
         .then((res) => {
           setLoading(false);
           console.log(res);
-          setServerResponses((serverResponses) => [
-            ...serverResponses,
-            res.data.items[0],
-          ]);
+          if (res.data.items) {
+            setServerResponses((serverResponses) => [
+              ...serverResponses,
+              res.data.items[0],
+            ]);
+          } else {
+            setServerResponses((serverResponses) => [
+              ...serverResponses,
+              res.data,
+            ]);
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -88,18 +95,22 @@ function App() {
           let repos = response.data;
           console.log(repos);
 
-          repos.forEach((repo) => {
-            console.log(
-              `Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`
-            );
-            serverResponseItem += `\nRepo name: ${repo.name}\n\tRepo Size (KBs): ${repo.size}`;
-            total_size_kbs += repo.size;
-          });
+          if (typeof repos === "string") { // repos is error string
+            serverResponseItem = repos;
+          } else {
+            repos.forEach((repo) => {
+              console.log(
+                `Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`
+              );
+              serverResponseItem += `\nRepo name: ${repo.name}\n\tRepo Size (KBs): ${repo.size}`;
+              total_size_kbs += repo.size;
+            });
 
-          console.log(
-            `Total size of ${username}'s public repos: ${total_size_kbs} KBs`
-          );
-          serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
+            console.log(
+              `Total size of ${username}'s public repos: ${total_size_kbs} KBs`
+            );
+            serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
+          }
 
           setServerResponses((serverResponses) => [
             ...serverResponses,
@@ -121,7 +132,9 @@ function App() {
         Enter a username and retrieve information on the user's public
         repositories and their sizes:
       </p>
-      <button onClick={hitBackend} style={{marginRight : "20px"}}>Contact Backend</button>
+      <button onClick={hitBackend} style={{ marginRight: "20px" }}>
+        Contact Backend
+      </button>
       <input
         type="text"
         value={username}
@@ -132,17 +145,23 @@ function App() {
       <button onClick={submitUserRequest}>Render Raw User Info</button>
       <button onClick={getUserRepos}>Get Raw Repo Info</button>
       <button onClick={getUserRepoSizes}>Get Repo Sizes</button>
-      <button onClick={clearResponses} style={{marginLeft : "20px"}}>Clear Responses</button>
+      <button onClick={clearResponses} style={{ marginLeft: "20px" }}>
+        Clear Responses
+      </button>
 
       {username ? <p>Looking for: {username}</p> : <></>}
       {loading ? <p>Loading ...</p> : <></>}
-      {noUsernameError ? <p style={{color: "red"}}>Please enter a username</p> : <></>}
+      {noUsernameError ? (
+        <p style={{ color: "red" }}>Please enter a username</p>
+      ) : (
+        <></>
+      )}
 
       {serverResponses.map((response, index) => {
         return (
           <div key={index}>
             <hr />
-            <p>{index}</p>
+            <p><b>R{index+1}</b></p>
             {typeof response === "object" ? (
               <div>
                 <pre>{JSON.stringify(response, null, 2)}</pre>
