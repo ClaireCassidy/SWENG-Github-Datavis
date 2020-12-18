@@ -14,55 +14,7 @@ function App() {
       ]);
     });
   };
-
-  const logSizeRepos = (username, url) => {
-    console.log(`${username}:${url}`);
-    axios
-      .get(`${url}`)
-      .then((res) => {
-        console.log(res.data);
-        let total_size_kbs = 0;
-
-        let serverResponseItem = `Showing Repo Sizes for "${username}":\n\n`;
-
-        let repos = res.data;
-        console.log(repos);
-        repos.forEach((repo) => {
-          console.log(`Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`);
-          serverResponseItem += `\nRepo name: ${repo.name}\n\tRepo Size (KBs): ${repo.size}`;
-          total_size_kbs += repo.size;
-        });
-
-        console.log(
-          `Total size of ${username}'s public repos: ${total_size_kbs} KBs`
-        );
-        serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
-
-        setServerResponses((serverResponses) => [
-          ...serverResponses,
-          serverResponseItem,
-        ]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const getRepoLanguages = () => {
-    if (username) {
-      axios.get(`/user/${username}/repo`).then((res) => {
-        console.log(res);
-      });
-    }
-  };
-
-
-  // -----
-
-  const newLineStyle = {
-    whiteSpace: "pre-wrap",
-  };
-
+  
   const clearResponses = () => {
     setServerResponses((serverResponses) => []);
   };
@@ -170,7 +122,9 @@ function App() {
                 <pre>{JSON.stringify(response, null, 2)}</pre>
               </div>
             ) : (
-              <p id={index} style={newLineStyle}>
+              <p id={index} style={{
+                whiteSpace: "pre-wrap",
+              }}>
                 {response}
               </p>
             )}
