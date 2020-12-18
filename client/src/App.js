@@ -1,12 +1,17 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [serverResponses, setServerResponses] = useState([]);
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [noUsernameError, setNoUsernameError] = useState(false);
 
   const hitBackend = () => {
+    setLoading(true);
     axios.get("/test").then((response) => {
+      setLoading(false);
+
       console.log(response.data);
       setServerResponses((serverResponses) => [
         ...serverResponses,
@@ -14,16 +19,20 @@ function App() {
       ]);
     });
   };
-  
+
   const clearResponses = () => {
     setServerResponses((serverResponses) => []);
   };
 
   const submitUserRequest = () => {
     if (username) {
+      setLoading(true);
+      setNoUsernameError(false);
+
       axios
         .get(`/user/${username}`)
         .then((res) => {
+          setLoading(false);
           console.log(res);
           setServerResponses((serverResponses) => [
             ...serverResponses,
@@ -33,14 +42,20 @@ function App() {
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      setNoUsernameError(true);
     }
   };
 
   const getUserRepos = () => {
     if (username) {
+      setLoading(true);
+      setNoUsernameError(false);
+
       axios
         .get(`/user/${username}/repo`)
         .then((res) => {
+          setLoading(false);
           console.log(res.data);
           setServerResponses((serverResponses) => [
             ...serverResponses,
@@ -50,14 +65,21 @@ function App() {
         .catch((error) => {
           console.log(error);
         });
+    } else {
+      setNoUsernameError(true);
     }
   };
 
   const getUserRepoSizes = () => {
     if (username) {
+      setLoading(true);
+      setNoUsernameError(false);
+
       axios
         .get(`/user/${username}/repo`)
         .then((response) => {
+          setLoading(false);
+
           // response an array of objects for each repo
           let total_size_kbs = 0;
 
@@ -78,7 +100,7 @@ function App() {
             `Total size of ${username}'s public repos: ${total_size_kbs} KBs`
           );
           serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
-  
+
           setServerResponses((serverResponses) => [
             ...serverResponses,
             serverResponseItem,
@@ -87,7 +109,9 @@ function App() {
         .catch((error) => {
           console.log(error);
         });
-    } else console.log("Invalid username submitted");
+    } else {
+      noUsernameError(true);
+    }
   };
 
   return (
@@ -111,6 +135,8 @@ function App() {
       <button onClick={clearResponses}>Clear Responses</button>
 
       {username ? <p>Looking for: {username}</p> : <></>}
+      {loading ? <p>Loading ...</p> : <></>}
+      {noUsernameError ? <p style={{color: "red"}}>Please enter a username</p> : <></>}
 
       {serverResponses.map((response, index) => {
         return (
@@ -122,9 +148,12 @@ function App() {
                 <pre>{JSON.stringify(response, null, 2)}</pre>
               </div>
             ) : (
-              <p id={index} style={{
-                whiteSpace: "pre-wrap",
-              }}>
+              <p
+                id={index}
+                style={{
+                  whiteSpace: "pre-wrap",
+                }}
+              >
                 {response}
               </p>
             )}
