@@ -32,7 +32,7 @@ userRouter.get('/:username', async (req, res) => {
     if (responseBody) {
         res.send(responseBody);
     } else {
-        res.send("Errorrrrrrrrrrrr");
+        res.send("Error");
     }
 } catch (err) {
     console.log(err);

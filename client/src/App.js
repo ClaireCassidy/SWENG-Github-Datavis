@@ -58,15 +58,24 @@ function App() {
       .then((res) => {
         console.log(res.data);
         let total_size_kbs = 0;
+
+        let serverResponseItem = `Showing Repo Sizes for "${username}":\n\n`; 
         
         let repos = res.data;
         console.log(repos);
         repos.forEach(repo => {
           console.log(`Repo name: ${repo.name}\nRepo Size (KBs): ${repo.size}`);
+          serverResponseItem += `\nRepo name: ${repo.name}\n\tRepo Size (KBs): ${repo.size}`;
           total_size_kbs += repo.size;
         });
 
         console.log(`Total size of ${username}'s public repos: ${total_size_kbs} KBs`);
+        serverResponseItem += `\n\t\tTotal size of ${username}'s public repos: ${total_size_kbs} KBs`;
+
+        setServerResponses((serverResponses) => [
+          ...serverResponses,
+          serverResponseItem,
+        ]);
       })
       .catch((error) => {
         console.log(error);
@@ -104,9 +113,19 @@ function App() {
 
   const getRepoLanguages = () => {
     if (username) {
-      
+      axios
+        .get(`/user/${username}/size`)
+        .then((res) => {
+          console.log(res);
+        })
     }
    }
+
+  const newLineStyle = {
+    // color: 'red',
+    // fontSize: 200
+    whiteSpace: 'pre-wrap'
+  };
 
   return (
     <>
@@ -125,11 +144,16 @@ function App() {
       <button onClick={getRepoLanguages}>Get Languages</button>
 
       <p>{username}</p>
+
       {serverResponses.map((response, index) => {
         return (
           <>
+            <hr/>
             <p>{index}</p>
-            <p>{JSON.stringify(response)}</p>
+            {typeof response === 'object' ?
+              <p id={index}>{JSON.stringify(response)}</p> 
+              : <p id={index} style={newLineStyle}>{response}</p>}
+
           </>
         );
       })}
