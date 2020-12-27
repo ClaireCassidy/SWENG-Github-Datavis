@@ -1,6 +1,15 @@
 import axios from "axios";
 import { useState } from "react";
-import { Container, Row, Col, Button, Form, Table } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Form,
+  Table,
+  Spinner,
+  Toast
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -11,7 +20,10 @@ function App() {
   const [username, setUsername] = useState("");
   const [repos, setRepos] = useState([]);
 
-  // just the info we need for the sidebar
+  const [sidebarLoading, setSidebarLoading] = useState(false);
+  const [noUsernameError, setNoUsernameError] = useState(false);
+
+  // just the info we need from a Repo response for the sidebar
   function RepoConcise(name, url) {
     this.name = name;
     this.url = url;
@@ -29,14 +41,16 @@ function App() {
 
   const getReposForUsername = () => {
     if (username) {
+      setSidebarLoading(true);
       axios
         .get(`/user/${username}/repo`)
         .then((res) => {
+          setSidebarLoading(false);
           console.log(res.data);
           if (Array.isArray(res.data)) {
             const repos = res.data;
             //console.log("WHOPPEE!!");
-            repos.map((repo, index, arr) => {
+            repos.forEach((repo, index, arr) => {
               arr[index] = new RepoConcise(repo.name, repo.url);
             });
             console.log(repos);
@@ -46,8 +60,10 @@ function App() {
         })
         .catch((error) => {
           console.log(error);
+          setSidebarLoading(false);
         });
     } else {
+      setNoUsernameError(true);
     }
   };
 
@@ -73,6 +89,7 @@ function App() {
           console.log(error);
         });
     } else {
+
     }
   };
 
@@ -82,11 +99,6 @@ function App() {
         <Row>
           {/* sidebar */}
           <Col xs={2} className="App__Sidebar">
-            {debug && (
-              <Button variant="secondary" onClick={hitBackend}>
-                Test Backend
-              </Button>
-            )}
             <Form>
               <Form.Group controlId="FormUsername">
                 <Form.Label>Username:</Form.Label>
@@ -106,10 +118,24 @@ function App() {
               Test
             </Button>
 
-            {debug && <p>Username: {username}</p>}
+            {/* No Username */}
+            {noUsernameError && 
+              <Toast>
+              
+              </Toast>}
 
-            {repos && (
-              <Container fluid className="App__Sidebar__Repos">
+            {/* Loading spinner ... */}
+            {sidebarLoading && (
+              <Container className="App__Sidebar__Spinner">
+                <Spinner animation="border" role="status" variant="info">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              </Container>
+            )}
+
+            {/* Table of repos */}
+            {repos.length > 0 && !sidebarLoading && (
+              <Row className="App__Sidebar__Repos">
                 <Table striped bordered hover>
                   <thead>
                     <tr>
@@ -126,7 +152,7 @@ function App() {
                     })}
                   </tbody>
                 </Table>
-              </Container>
+              </Row>
             )}
           </Col>
 

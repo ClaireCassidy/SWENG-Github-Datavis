@@ -8,6 +8,15 @@
 }
 
 .App__Sidebar__Repos {
-    border: 1px solid green;
+    /* border: 1px solid green; */
     padding: 0px !important;
+    margin-top: 20px;
+}
+
+.App__Sidebar__Spinner {
+    /* border: 1px solid green; */
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px 10px 0px;
+    /* margin: auto !important; */
 }
