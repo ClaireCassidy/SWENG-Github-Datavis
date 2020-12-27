@@ -10,19 +10,6 @@ app.use(express.json());
 // a test route to make sure we can reach the backend
 //this would normally go in a routes file
 app.get("/test", (req, res) => {
-    // axios
-    //   .get("https://api.github.com/search/users", {
-    //     headers: {
-    //       Authorization: `token ${process.env.PAT}`,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error.response);
-    //   });
-
   res.send("Backend says hey!");
 });
 

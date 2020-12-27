@@ -1,12 +1,21 @@
 import axios from "axios";
 import { useState } from "react";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, Table } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
-  const [username, setUsername] = useState(null);
+  const [debug, setDebug] = useState(true);
   const [serverResponses, setServerResponses] = useState([]);
+
+  const [username, setUsername] = useState("");
+  const [repos, setRepos] = useState([]);
+
+  // just the info we need for the sidebar
+  function RepoConcise(name, url) {
+    this.name = name;
+    this.url = url;
+  }
 
   const hitBackend = () => {
     axios.get("/test").then((response) => {
@@ -18,12 +27,66 @@ function App() {
     });
   };
 
+  const getReposForUsername = () => {
+    if (username) {
+      axios
+        .get(`/user/${username}/repo`)
+        .then((res) => {
+          console.log(res.data);
+          if (Array.isArray(res.data)) {
+            const repos = res.data;
+            //console.log("WHOPPEE!!");
+            repos.map((repo, index, arr) => {
+              arr[index] = new RepoConcise(repo.name, repo.url);
+            });
+            console.log(repos);
+
+            setRepos(repos);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+    }
+  };
+
+  const submitUserRequest = () => {
+    if (username) {
+      axios
+        .get(`/user/${username}`)
+        .then((res) => {
+          console.log(res);
+          if (res.data.items) {
+            setServerResponses((serverResponses) => [
+              ...serverResponses,
+              res.data.items[0],
+            ]);
+          } else {
+            setServerResponses((serverResponses) => [
+              ...serverResponses,
+              res.data,
+            ]);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+    }
+  };
+
   return (
     <div className="App">
       <Container fluid>
         <Row>
           {/* sidebar */}
           <Col xs={2} className="App__Sidebar">
+            {debug && (
+              <Button variant="secondary" onClick={hitBackend}>
+                Test Backend
+              </Button>
+            )}
             <Form>
               <Form.Group controlId="FormUsername">
                 <Form.Label>Username:</Form.Label>
@@ -38,15 +101,25 @@ function App() {
             <Button
               variant="primary"
               className="btn-block"
-              onClick={hitBackend}
+              onClick={getReposForUsername}
             >
               Test
             </Button>
 
-            <p>Username: {username}</p>
+            {debug && <p>Username: {username}</p>}
+
+            {repos &&
+              repos.map((repo, index) => {
+                return (
+                  <div key={index}>
+                      <pre>{JSON.stringify(repo, null, 2)}</pre>
+                  </div>
+                );
+              })}
           </Col>
 
           <Col xs={10} className="App__MainContent">
+
             {serverResponses.map((response, index) => {
               return (
                 <div key={index}>
