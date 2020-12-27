@@ -6,3 +6,8 @@
 .App__MainContent {
     border: 1px solid blue;
 }
+
+.App__Sidebar__Repos {
+    border: 1px solid green;
+    padding: 0px !important;
+}

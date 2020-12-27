@@ -108,18 +108,29 @@ function App() {
 
             {debug && <p>Username: {username}</p>}
 
-            {repos &&
-              repos.map((repo, index) => {
-                return (
-                  <div key={index}>
-                      <pre>{JSON.stringify(repo, null, 2)}</pre>
-                  </div>
-                );
-              })}
+            {repos && (
+              <Container fluid className="App__Sidebar__Repos">
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Select a Repo:</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {repos.map((repo, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{repo.name}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </Table>
+              </Container>
+            )}
           </Col>
 
           <Col xs={10} className="App__MainContent">
-
             {serverResponses.map((response, index) => {
               return (
                 <div key={index}>
