@@ -48,11 +48,16 @@ userRouter.get("/:username/repo", async (req, res) => {
 // get a particular repo's languages:
 userRouter.get("/:username/:repo/languages", async (req, res) => {
   try {
-    res.send(JSON.stringify({
-      username: req.params.username,
-      repo: req.params.repo,
-      getting: "languages"
-    }));
+
+    const languagesRes = await getLanguageData(req.params.username, req.params.repo);
+    console.log("FROM ROUTE: \n\n"+ JSON.stringify(languagesRes))
+
+    res.send(languagesRes);
+    // res.send(JSON.stringify({
+    //   username: req.params.username,
+    //   repo: req.params.repo,
+    //   getting: "languages"
+    // }));
   } catch (err) {
     console.log(err);
   }
@@ -94,6 +99,27 @@ async function getRepoData(repoUrl) {
       } catch (err) {
         console.log(err);
       }
+}
+
+// fetch the language data for a particular repo
+async function getLanguageData(username, repo) {
+  try {
+
+    console.log(`https://api.github.com/repos/${username}/${repo}/languages`);
+    const res = await axios.get(
+      `https://api.github.com/repos/${username}/${repo}/languages`,
+      {
+        headers: {
+          Authorization: `token ${process.env.PAT}`,
+        },
+      }
+    );
+    //return response.items[0].login+":"+response.items[0].id;
+    console.log("FROM LANGUAGE FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 module.exports = userRouter;
