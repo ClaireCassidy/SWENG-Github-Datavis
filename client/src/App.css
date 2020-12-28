@@ -1,4 +1,5 @@
 
+
 .App__Header {
     font-size: 1.8em;
     color: #0275d8;
@@ -11,6 +12,37 @@
 .App__Sidebar {
     border: 1px solid #f7f7f7; /* Faded */
     background-color: #f7f7f7;
+    overflow-y: auto;
+    scrollbar-color: red yellow;
+}
+
+.App__Sidebar::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
+  }
+  
+  .App__Sidebar::-webkit-scrollbar {
+    width: 12px;
+    background-color: #F5F5F5;
+  }
+  
+  .App__Sidebar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, .3);
+    background-color: #CFD8DC;
+  }
+
+.App__Sidebar::-webkit-scrollbar-track, 
+.App__Sidebar::-moz-scrollbar-track, 
+.App__Sidebar::-o-scrollbar-track
+{
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -moz-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    -o-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    border-radius: 10px;
+    background-color: #F5F5F5;
 }
 
 .App__MainContent {
@@ -39,6 +71,7 @@
     margin: 20px 0px 10px 0px;
     /* margin: auto !important; */
 }
+
 
 .App__Sidebar__Repos__ReposTable tr {
     cursor: pointer;

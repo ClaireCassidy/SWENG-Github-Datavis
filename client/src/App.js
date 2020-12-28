@@ -222,6 +222,7 @@ function App() {
 
             {/* Table of repos */}
             {repos.length > 0 && !sidebarLoading && (
+              
               <Row className="App__Sidebar__Repos">
                 <Table
                   striped
