@@ -10,6 +10,8 @@ import {
   Spinner,
   Toast,
 } from "react-bootstrap";
+import CommitGraph from './CommitGraph';
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
@@ -272,12 +274,22 @@ function App() {
                 <Row className="App__MainContent__Header">
                   <h2>
                     <span className="header-weak">{submittedUsername}/ </span>
-                    <span className="header-strong"><strong><a href={curRepo.url}>{curRepo.name}</a></strong></span>
+                    <span className="header-strong">
+                      <strong>
+                        <a
+                          href={curRepo.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {curRepo.name}
+                        </a>
+                      </strong>
+                    </span>
                     {debug && <p>{curRepo.url}</p>}
                   </h2>
                 </Row>
                 <Row>
-                  <h2>Waddup</h2>
+                  <CommitGraph repo={curRepo}></CommitGraph>
                 </Row>
               </Container>
             )}
