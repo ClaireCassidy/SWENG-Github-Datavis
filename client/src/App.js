@@ -9,7 +9,6 @@ import {
   Table,
   Spinner,
   Toast,
-  Fade,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -50,14 +49,13 @@ function App() {
 
   const getReposForUsername = () => {
     if (username) {
-
       // trigger the Spinner
       setSidebarLoading(true);
       // update the submitted username
       setSubmittedUsername(username);
       // get rid of the last request's repos
       setRepos([]);
-      
+
       // submit request to server
       axios
         .get(`/user/${username}/repo`)
@@ -65,15 +63,17 @@ function App() {
           setSidebarLoading(false);
           console.log(res.data);
 
-          if (Array.isArray(res.data)) { //success
+          if (Array.isArray(res.data)) {
+            //success
             const repos = res.data;
             repos.forEach((repo, index, arr) => {
-              arr[index] = new RepoConcise(repo.name, repo.url);
+              arr[index] = new RepoConcise(repo.name, repo.html_url);
             });
             console.log(repos);
 
             setRepos(repos);
-          } else {  // user dne
+          } else {
+            // user dne
             console.log("dne");
             setInvalidUsernameError(true);
           }
@@ -120,15 +120,16 @@ function App() {
     console.log(`Name: ${repo.name}, Url: ${repo.url}`);
     setCurRepo(repo);
     setRepoActive(true);
-  }
+  };
 
   return (
     <div className="App">
-      <Container 
-      fluid
-      style={{
-        height: "100vh"
-      }}>
+      <Container
+        fluid
+        style={{
+          height: "100vh",
+        }}
+      >
         {/* No Username */}
         {noUsernameError && (
           <Toast
@@ -153,38 +154,39 @@ function App() {
         )}
 
         {/* Invalid Username */}
-        {invalidUsernameError &&
+        {invalidUsernameError && (
           <Toast
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            margin: "10px",
-          }}
-          className="text-muted"
-          onClose={() => setInvalidUsernameError(false)}
-          show={invalidUsernameError}
-          delay={2000}
-          autohide
-        >
-          <Toast.Header className="bg-danger text-white">
-            <strong className="mr-auto">Invalid Username</strong>
-            <small>Now</small>
-          </Toast.Header>
-          <Toast.Body>User <strong>{submittedUsername}</strong> doesn't seem to exist :(</Toast.Body>
-        </Toast>
-        }
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              margin: "10px",
+            }}
+            className="text-muted"
+            onClose={() => setInvalidUsernameError(false)}
+            show={invalidUsernameError}
+            delay={2000}
+            autohide
+          >
+            <Toast.Header className="bg-danger text-white">
+              <strong className="mr-auto">Invalid Username</strong>
+              <small>Now</small>
+            </Toast.Header>
+            <Toast.Body>
+              User <strong>{submittedUsername}</strong> doesn't seem to exist :(
+            </Toast.Body>
+          </Toast>
+        )}
 
         <Row>
           {/* sidebar */}
-          <Col 
-            xs={2} 
+          <Col
+            xs={2}
             className="App__Sidebar"
             style={{
-              height: "100vh"
+              height: "100vh",
             }}
           >
-
             {/* Heading */}
             <h1 className="App__Header">GitHub Access</h1>
 
@@ -210,7 +212,7 @@ function App() {
               </Button>
             </Form>
 
-            <hr/>
+            <hr />
             {/* Loading spinner ... */}
             {sidebarLoading && (
               <Container className="App__Sidebar__Spinner">
@@ -222,7 +224,6 @@ function App() {
 
             {/* Table of repos */}
             {repos.length > 0 && !sidebarLoading && (
-              
               <Row className="App__Sidebar__Repos">
                 <Table
                   striped
@@ -241,7 +242,12 @@ function App() {
                   <tbody>
                     {repos.map((repo, index) => {
                       return (
-                        <tr key={index} onClick={() => {handleRepoSelection(repo)}}>
+                        <tr
+                          key={index}
+                          onClick={() => {
+                            handleRepoSelection(repo);
+                          }}
+                        >
                           <td>{repo.name}</td>
                         </tr>
                       );
@@ -253,13 +259,28 @@ function App() {
           </Col>
 
           <Col xs={10} className="App__MainContent">
-
             {/* User hasn't selected a repo yet */}
-            {!repoActive &&
+            {!repoActive && (
               <Container className="App__MainContent__NoData">
                 <h2>Select a repo to display data</h2>
               </Container>
-            }
+            )}
+
+            {/* User has selected a Repo */}
+            {repoActive && (
+              <Container fluid>
+                <Row className="App__MainContent__Header">
+                  <h2>
+                    <span className="header-weak">{submittedUsername}/ </span>
+                    <span className="header-strong"><strong><a href={curRepo.url}>{curRepo.name}</a></strong></span>
+                    {debug && <p>{curRepo.url}</p>}
+                  </h2>
+                </Row>
+                <Row>
+                  <h2>Waddup</h2>
+                </Row>
+              </Container>
+            )}
             {/* {serverResponses.map((response, index) => {
               return (
                 <div key={index}>
