@@ -1,10 +1,29 @@
 
+.App__Header {
+    font-size: 1.8em;
+    color: #0275d8;
+    /* text-shadow: 1px 1px 1px #292b2c; */
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin: 20px 0px 20px 0px;
+}
+
 .App__Sidebar {
-    border: 1px solid red;
+    border: 1px solid #f7f7f7; /* Faded */
+    background-color: #f7f7f7;
 }
 
 .App__MainContent {
-    border: 1px solid blue;
+    /* border: 1px solid blue; */
+    display: flex;
+}
+
+.App__MainContent__NoData {
+    /* border: 1px solid red; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(41, 43, 44, 0.3);
 }
 
 .App__Sidebar__Repos {
@@ -27,4 +46,5 @@
 
 .App__Sidebar__Repos__ReposTable tbody tr:hover td, .App__Sidebar__Repos__ReposTable tbody tr:hover th {
     color: #0275d8; /* Primary */
+    /* text-decoration: underline; */
   }

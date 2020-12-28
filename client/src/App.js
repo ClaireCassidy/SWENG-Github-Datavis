@@ -18,11 +18,18 @@ function App() {
   const [debug, setDebug] = useState(true);
   const [serverResponses, setServerResponses] = useState([]);
 
+  // text field
   const [username, setUsername] = useState("");
+  // actually submitted
+  const [submittedUsername, setSubmittedUsername] = useState("");
   const [repos, setRepos] = useState([]);
 
   const [sidebarLoading, setSidebarLoading] = useState(false);
   const [noUsernameError, setNoUsernameError] = useState(false);
+
+  // has a repo been selected from the list
+  const [repoActive, setRepoActive] = useState(false);
+  const [curRepo, setCurRepo] = useState(null);
 
   // just the info we need from a Repo response for the sidebar
   function RepoConcise(name, url) {
@@ -30,25 +37,32 @@ function App() {
     this.url = url;
   }
 
-  const hitBackend = () => {
-    axios.get("/test").then((response) => {
-      console.log(response.data);
-      setServerResponses((serverResponses) => [
-        ...serverResponses,
-        response.data,
-      ]);
-    });
-  };
+  // const hitBackend = () => {
+  //   axios.get("/test").then((response) => {
+  //     console.log(response.data);
+  //     setServerResponses((serverResponses) => [
+  //       ...serverResponses,
+  //       response.data,
+  //     ]);
+  //   });
+  // };
 
   const getReposForUsername = () => {
     if (username) {
+
+      // trigger the Spinner
       setSidebarLoading(true);
+      // update the submitted username
+      setSubmittedUsername(username);
+      
+      // submit request to server
       axios
         .get(`/user/${username}/repo`)
         .then((res) => {
           setSidebarLoading(false);
           console.log(res.data);
-          if (Array.isArray(res.data)) {
+
+          if (Array.isArray(res.data)) { //success
             const repos = res.data;
             repos.forEach((repo, index, arr) => {
               arr[index] = new RepoConcise(repo.name, repo.url);
@@ -96,9 +110,19 @@ function App() {
     getReposForUsername();
   };
 
+  const handleRepoSelection = (repo) => {
+    console.log(`Name: ${repo.name}, Url: ${repo.url}`);
+    setCurRepo(repo);
+    setRepoActive(true);
+  }
+
   return (
     <div className="App">
-      <Container fluid>
+      <Container 
+      fluid
+      style={{
+        height: "100vh"
+      }}>
         {/* No Username */}
         {noUsernameError && (
           <Toast
@@ -124,7 +148,17 @@ function App() {
 
         <Row>
           {/* sidebar */}
-          <Col xs={2} className="App__Sidebar">
+          <Col 
+            xs={2} 
+            className="App__Sidebar"
+            style={{
+              height: "100vh"
+            }}
+          >
+
+            {/* Heading */}
+            <h1 className="App__Header">GitHub Access</h1>
+
             {/* Username input */}
             <Form
               onSubmit={(e) => {
@@ -147,6 +181,7 @@ function App() {
               </Button>
             </Form>
 
+            <hr/>
             {/* Loading spinner ... */}
             {sidebarLoading && (
               <Container className="App__Sidebar__Spinner">
@@ -162,7 +197,6 @@ function App() {
                 <Table
                   striped
                   bordered
-                  hover
                   className="App__Sidebar__Repos__ReposTable"
                 >
                   <thead>
@@ -177,7 +211,7 @@ function App() {
                   <tbody>
                     {repos.map((repo, index) => {
                       return (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => {handleRepoSelection(repo)}}>
                           <td>{repo.name}</td>
                         </tr>
                       );
@@ -189,7 +223,14 @@ function App() {
           </Col>
 
           <Col xs={10} className="App__MainContent">
-            {serverResponses.map((response, index) => {
+
+            {/* User hasn't selected a repo yet */}
+            {!repoActive &&
+              <Container className="App__MainContent__NoData">
+                <h2>Select a repo to display data</h2>
+              </Container>
+            }
+            {/* {serverResponses.map((response, index) => {
               return (
                 <div key={index}>
                   <hr />
@@ -212,7 +253,7 @@ function App() {
                   )}
                 </div>
               );
-            })}
+            })} */}
           </Col>
         </Row>
       </Container>
