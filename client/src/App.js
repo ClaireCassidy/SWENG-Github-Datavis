@@ -92,6 +92,10 @@ function App() {
     }
   };
 
+  const handleUsernameSubmission = (e) => {
+    getReposForUsername();
+  };
+
   return (
     <div className="App">
       <Container fluid>
@@ -100,20 +104,17 @@ function App() {
           <Toast
             style={{
               position: "absolute",
-              bottom: 0,
+              top: 0,
               right: 0,
+              margin: "10px",
             }}
+            className="text-muted"
             onClose={() => setNoUsernameError(false)}
             show={noUsernameError}
-            delay={3000}
+            delay={2000}
             autohide
           >
-            <Toast.Header>
-              {/* <img
-                src="./warning.png"
-                className="rounded mr-2"
-                alt=""
-              /> */}
+            <Toast.Header className="bg-info text-white">
               <strong className="mr-auto">No Username</strong>
               <small>Now</small>
             </Toast.Header>
@@ -124,7 +125,13 @@ function App() {
         <Row>
           {/* sidebar */}
           <Col xs={2} className="App__Sidebar">
-            <Form>
+            {/* Username input */}
+            <Form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleUsernameSubmission(e);
+              }}
+            >
               <Form.Group controlId="FormUsername">
                 <Form.Label>Username:</Form.Label>
                 <Form.Control
@@ -134,14 +141,11 @@ function App() {
                   onChange={(e) => setUsername(e.target.value)}
                 />
               </Form.Group>
+              {/* Submit Username */}
+              <Button variant="primary" className="btn-block" type="submit">
+                Get Repos
+              </Button>
             </Form>
-            <Button
-              variant="primary"
-              className="btn-block"
-              onClick={getReposForUsername}
-            >
-              Get Repos
-            </Button>
 
             {/* Loading spinner ... */}
             {sidebarLoading && (
@@ -155,9 +159,18 @@ function App() {
             {/* Table of repos */}
             {repos.length > 0 && !sidebarLoading && (
               <Row className="App__Sidebar__Repos">
-                <Table striped bordered hover>
+                <Table
+                  striped
+                  bordered
+                  hover
+                  className="App__Sidebar__Repos__ReposTable"
+                >
                   <thead>
-                    <tr>
+                    <tr
+                      style={{
+                        cursor: "default",
+                      }}
+                    >
                       <th>Select a Repo:</th>
                     </tr>
                   </thead>

@@ -20,3 +20,11 @@
     margin: 20px 0px 10px 0px;
     /* margin: auto !important; */
 }
+
+.App__Sidebar__Repos__ReposTable tr {
+    cursor: pointer;
+}
+
+.App__Sidebar__Repos__ReposTable tbody tr:hover td, .App__Sidebar__Repos__ReposTable tbody tr:hover th {
+    color: #0275d8; /* Primary */
+  }
