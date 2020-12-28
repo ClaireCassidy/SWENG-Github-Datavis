@@ -11,6 +11,7 @@ import {
   Toast,
 } from "react-bootstrap";
 import CommitGraph from './CommitGraph';
+import LanguagePiechart from './LanguagePiechart';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -69,6 +70,7 @@ function App() {
             //success
             const repos = res.data;
             repos.forEach((repo, index, arr) => {
+              console.log(repo.url);
               arr[index] = new RepoConcise(repo.name, repo.html_url);
             });
             console.log(repos);
@@ -290,6 +292,7 @@ function App() {
                 </Row>
                 <Row>
                   <CommitGraph repo={curRepo}></CommitGraph>
+                  <LanguagePiechart data={null}></LanguagePiechart>
                 </Row>
               </Container>
             )}

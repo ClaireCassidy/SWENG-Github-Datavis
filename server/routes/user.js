@@ -45,6 +45,19 @@ userRouter.get("/:username/repo", async (req, res) => {
   }
 });
 
+// get a particular repo's languages:
+userRouter.get("/:username/:repo/languages", async (req, res) => {
+  try {
+    res.send(JSON.stringify({
+      username: req.params.username,
+      repo: req.params.repo,
+      getting: "languages"
+    }));
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 // query github api for user
 async function getUserData(username) {
   try {
