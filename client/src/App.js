@@ -8,7 +8,8 @@ import {
   Form,
   Table,
   Spinner,
-  Toast
+  Toast,
+  Fade,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -49,7 +50,6 @@ function App() {
           console.log(res.data);
           if (Array.isArray(res.data)) {
             const repos = res.data;
-            //console.log("WHOPPEE!!");
             repos.forEach((repo, index, arr) => {
               arr[index] = new RepoConcise(repo.name, repo.url);
             });
@@ -89,13 +89,38 @@ function App() {
           console.log(error);
         });
     } else {
-
     }
   };
 
   return (
     <div className="App">
       <Container fluid>
+        {/* No Username */}
+        {noUsernameError && (
+          <Toast
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+            }}
+            onClose={() => setNoUsernameError(false)}
+            show={noUsernameError}
+            delay={3000}
+            autohide
+          >
+            <Toast.Header>
+              {/* <img
+                src="./warning.png"
+                className="rounded mr-2"
+                alt=""
+              /> */}
+              <strong className="mr-auto">No Username</strong>
+              <small>Now</small>
+            </Toast.Header>
+            <Toast.Body>Please enter a username before proceeding</Toast.Body>
+          </Toast>
+        )}
+
         <Row>
           {/* sidebar */}
           <Col xs={2} className="App__Sidebar">
@@ -115,14 +140,8 @@ function App() {
               className="btn-block"
               onClick={getReposForUsername}
             >
-              Test
+              Get Repos
             </Button>
-
-            {/* No Username */}
-            {noUsernameError && 
-              <Toast>
-              
-              </Toast>}
 
             {/* Loading spinner ... */}
             {sidebarLoading && (
