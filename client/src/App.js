@@ -26,6 +26,7 @@ function App() {
 
   const [sidebarLoading, setSidebarLoading] = useState(false);
   const [noUsernameError, setNoUsernameError] = useState(false);
+  const [invalidUsernameError, setInvalidUsernameError] = useState(false);
 
   // has a repo been selected from the list
   const [repoActive, setRepoActive] = useState(false);
@@ -54,6 +55,8 @@ function App() {
       setSidebarLoading(true);
       // update the submitted username
       setSubmittedUsername(username);
+      // get rid of the last request's repos
+      setRepos([]);
       
       // submit request to server
       axios
@@ -70,6 +73,9 @@ function App() {
             console.log(repos);
 
             setRepos(repos);
+          } else {  // user dne
+            console.log("dne");
+            setInvalidUsernameError(true);
           }
         })
         .catch((error) => {
@@ -145,6 +151,29 @@ function App() {
             <Toast.Body>Please enter a username before proceeding</Toast.Body>
           </Toast>
         )}
+
+        {/* Invalid Username */}
+        {invalidUsernameError &&
+          <Toast
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            margin: "10px",
+          }}
+          className="text-muted"
+          onClose={() => setInvalidUsernameError(false)}
+          show={invalidUsernameError}
+          delay={2000}
+          autohide
+        >
+          <Toast.Header className="bg-danger text-white">
+            <strong className="mr-auto">Invalid Username</strong>
+            <small>Now</small>
+          </Toast.Header>
+          <Toast.Body>User <strong>{submittedUsername}</strong> doesn't seem to exist :(</Toast.Body>
+        </Toast>
+        }
 
         <Row>
           {/* sidebar */}
