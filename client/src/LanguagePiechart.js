@@ -38,7 +38,7 @@ export default function LanguagePiechart({ languageInfo, loading }) {
         >
           <RadialBar
             minAngle={15}
-            label={{ fill: "black", position: "insideStart" }}
+            label={{ fill: "black", position: "insideStart",  }}
             background
             clockWise={true}
             dataKey="size"
@@ -52,9 +52,10 @@ export default function LanguagePiechart({ languageInfo, loading }) {
             align="right"
             iconType="circle"
           />
-          <Tooltip />
+          <Tooltip labelFormatter={() => "Size in KBs"}/>
         </RadialBarChart>
       )}
     </>
   );
+  
 }
