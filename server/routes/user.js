@@ -67,14 +67,11 @@ userRouter.get("/:username/:repo/languages", async (req, res) => {
 // fetch most recent 'amount' commits for the given repo
 userRouter.get("/:username/:repo/commits/:amount", async (req, res) => {
   try {
-    res.send(
-      JSON.stringify({
-        username: req.params.username,
-        repo: req.params.repo,
-        getting: "commits",
-        amount: req.params.amount,
-      })
-    );
+    //api.github.com/repos/esjmb/yesod/commits?per_page=20
+    const commitsRes = await getNCommits(req.params.username, req.params.repo, req.params.amount);
+    console.log("FROM ROUTE: \n\n" + JSON.stringify(commitsRes));
+
+    res.send(commitsRes);
   } catch (err) {
     console.log(err);
   }
@@ -128,6 +125,26 @@ async function getLanguageData(username, repo) {
     );
     console.log(
       "FROM LANGUAGE FETCHING FUNCTION: \n\n" + JSON.stringify(res.data)
+    );
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// make a request to GitHub API for given amount of commits from a given user's named repo
+async function getNCommits(username, repo, amount) {
+  try {
+    const res = await axios.get(
+      `https://api.github.com/repos/${username}/${repo}/commits?per_page=${amount}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.PAT}`,
+        },
+      }
+    );
+    console.log(
+      "FROM COMMIT FETCHING FUNCTION: \n\n" + JSON.stringify(res.data)
     );
     return res.data;
   } catch (err) {

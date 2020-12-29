@@ -44,6 +44,8 @@ function App() {
   const [curRepo, setCurRepo] = useState(null);
   const [languageDataLoading, setLanguageDataLoading] = useState(false);
   const [repoLanguageData, setRepoLanguageData] = useState({}); // used to render the radial chart
+  // commit data for curRepo
+  const [curRepoCommits, setCurRepoCommits] = useState([]);
 
   // just the info we need from a Repo response for the sidebar
   function RepoConcise(name, url) {
@@ -147,6 +149,8 @@ function App() {
         setLanguageDataLoading(false);
         console.log(error);
       });
+
+      // fetch the commit data from the API
   };
 
   return (
