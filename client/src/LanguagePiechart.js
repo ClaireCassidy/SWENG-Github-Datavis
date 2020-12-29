@@ -52,7 +52,7 @@ export default function LanguagePiechart({ languageInfo, loading }) {
             align="right"
             iconType="circle"
           />
-          <Tooltip labelFormatter={() => "Size in KBs"}/>
+          <Tooltip labelFormatter={(index) => languageInfo[index].name} />
         </RadialBarChart>
       )}
     </>
