@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { RadialBarChart, RadialBar, Legend, Tooltip } from "recharts";
 
-export default function LanguagePiechart({ theData }) {
+export default function LanguagePiechart({ languageInfo }) {
+
+    console.log(`FROM PIECHART: ${JSON.stringify(languageInfo)}`);
   const data = [
     {
         name: "java",
@@ -16,6 +18,7 @@ export default function LanguagePiechart({ theData }) {
   ];
 
   return (
+
     <RadialBarChart
       width={1000}
       height={350}

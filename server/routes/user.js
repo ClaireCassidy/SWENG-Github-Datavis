@@ -105,7 +105,6 @@ async function getRepoData(repoUrl) {
 async function getLanguageData(username, repo) {
   try {
 
-    console.log(`https://api.github.com/repos/${username}/${repo}/languages`);
     const res = await axios.get(
       `https://api.github.com/repos/${username}/${repo}/languages`,
       {
@@ -114,7 +113,6 @@ async function getLanguageData(username, repo) {
         },
       }
     );
-    //return response.items[0].login+":"+response.items[0].id;
     console.log("FROM LANGUAGE FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
     return res.data;
   } catch (err) {

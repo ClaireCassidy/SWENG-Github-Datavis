@@ -10,11 +10,21 @@ import {
   Spinner,
   Toast,
 } from "react-bootstrap";
-import CommitGraph from './CommitGraph';
-import LanguagePiechart from './LanguagePiechart';
+import CommitGraph from "./CommitGraph";
+import LanguagePiechart from "./LanguagePiechart";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+
+const RADIAL_CHART_COLOURS = [
+  "#8884d8",
+  "#83a6ed",
+  "#8dd1e1",
+  "#82ca9d",
+  "#a4de6c",
+  "#d0ed57",
+  "#ffc658",
+];
 
 function App() {
   const [debug, setDebug] = useState(true);
@@ -33,6 +43,7 @@ function App() {
   // has a repo been selected from the list
   const [repoActive, setRepoActive] = useState(false);
   const [curRepo, setCurRepo] = useState(null);
+  const [repoLanguageData, setRepoLanguageData] = useState({}); // used to render the radial chart
 
   // just the info we need from a Repo response for the sidebar
   function RepoConcise(name, url) {
@@ -40,15 +51,27 @@ function App() {
     this.url = url;
   }
 
-  // const hitBackend = () => {
-  //   axios.get("/test").then((response) => {
-  //     console.log(response.data);
-  //     setServerResponses((serverResponses) => [
-  //       ...serverResponses,
-  //       response.data,
-  //     ]);
-  //   });
-  // };
+  const parseLanguageInfo = (languageInfo) => {
+    let languagesFormatted = [];
+
+    // array [{language: size}, ...]
+    let kvps = Object.entries(languageInfo);
+    console.log(kvps);
+
+    for (let i=0; i< Math.min(kvps.length, RADIAL_CHART_COLOURS.length); i++) {
+      console.log(kvps[i]);
+      const [language, size] = kvps[i];
+      console.log(`Language: ${language}, Size: ${size}`);
+
+      languagesFormatted.push({
+        name: language,
+        size: size,
+        fill: RADIAL_CHART_COLOURS[i]
+      });
+    }
+
+    return languagesFormatted;
+  };
 
   const getReposForUsername = () => {
     if (username) {
@@ -64,16 +87,13 @@ function App() {
         .get(`/user/${username}/repo`)
         .then((res) => {
           setSidebarLoading(false);
-          console.log(res.data);
 
           if (Array.isArray(res.data)) {
             //success
             const repos = res.data;
             repos.forEach((repo, index, arr) => {
-              console.log(repo.url);
               arr[index] = new RepoConcise(repo.name, repo.html_url);
             });
-            console.log(repos);
 
             setRepos(repos);
           } else {
@@ -91,39 +111,33 @@ function App() {
     }
   };
 
-  const submitUserRequest = () => {
-    if (username) {
-      axios
-        .get(`/user/${username}`)
-        .then((res) => {
-          console.log(res);
-          if (res.data.items) {
-            setServerResponses((serverResponses) => [
-              ...serverResponses,
-              res.data.items[0],
-            ]);
-          } else {
-            setServerResponses((serverResponses) => [
-              ...serverResponses,
-              res.data,
-            ]);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-    }
-  };
-
   const handleUsernameSubmission = (e) => {
     getReposForUsername();
   };
 
   const handleRepoSelection = (repo) => {
-    console.log(`Name: ${repo.name}, Url: ${repo.url}`);
+    // set the active repo
     setCurRepo(repo);
     setRepoActive(true);
+
+    // fetch the language data from api
+    axios
+      .get(`/user/${submittedUsername}/${repo.name}/languages`)
+      .then((res) => {
+        console.log(res.data);
+
+        let languageInfo = res.data;
+
+        if (!(Object.keys(languageInfo).length === 0)) {
+          languageInfo = parseLanguageInfo(languageInfo);
+          console.log(languageInfo);
+        }
+
+        setRepoLanguageData(languageInfo); // may be empty object
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -292,7 +306,7 @@ function App() {
                 </Row>
                 <Row>
                   <CommitGraph repo={curRepo}></CommitGraph>
-                  <LanguagePiechart data={null}></LanguagePiechart>
+                  <LanguagePiechart languageInfo={repoLanguageData}></LanguagePiechart>
                 </Row>
               </Container>
             )}
