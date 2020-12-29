@@ -1,3 +1,11 @@
+.App {
+    background-color: #f7f7f7;
+    /* border:1px solid red; */
+}
+
+.App__Container {
+    /* border: 10px solid red; */
+}
 .App__Header {
   font-size: 1.8em;
   color: #0275d8;
@@ -35,6 +43,7 @@
 
 .App__MainContent {
   /* border: 1px solid blue; */
+  background-color: white;
   display: flex;
   padding: 20px;
   padding-left: 40px;
@@ -68,11 +77,17 @@
     padding-bottom: 40px;
 }
 
+.App__MainContent__Accordian {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+
 .main-content-header {
     /* border: 1px solid red; */
     margin-left: 0px;
     width: 100%;
-    padding: 0.3em;
+    padding: 0.5em;
     background-color: #f7f7f7;
 }
 

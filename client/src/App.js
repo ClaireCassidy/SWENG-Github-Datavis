@@ -9,6 +9,10 @@ import {
   Table,
   Spinner,
   Toast,
+  Card,
+  Accordion,
+  ListGroup,
+  ListGroupItem
 } from "react-bootstrap";
 import CommitGraph from "./CommitGraph";
 import LanguagePiechart from "./LanguagePiechart";
@@ -38,6 +42,9 @@ function App() {
   const [sidebarLoading, setSidebarLoading] = useState(false);
   const [noUsernameError, setNoUsernameError] = useState(false);
   const [invalidUsernameError, setInvalidUsernameError] = useState(false);
+
+  const [commitDensityInfoOpen, setCommitDensityInfoOpen] = useState(false);
+  const [languageInfoOpen, setLanguageInfoOpen] = useState(false);
 
   // has a repo been selected from the list
   const [repoActive, setRepoActive] = useState(false);
@@ -224,6 +231,7 @@ function App() {
         style={{
           height: "100vh",
         }}
+        className="App__Container"
       >
         {/* No Username */}
         {noUsernameError && (
@@ -380,37 +388,90 @@ function App() {
                     </span>
                   </h2>
                 </Row>
-                <Container
-                  fluid
-                  className="App__MainContent__Container"
-                >
+                <Container fluid className="App__MainContent__Container">
                   <Row>
-                    <h3 className="main-content-header">Commit Density for <strong>{curRepo.name}</strong></h3>
+                    <h3 className="main-content-header">
+                      Commit Density for <strong>{curRepo.name}</strong>
+                    </h3>
                   </Row>
                   <Row className="main-content-row">
-                    <p><i>Shows the time between a given commit and the previous commit in days. Lower is better, with a score of 0 indicating that this commit and the previous commit occurred on the same day. This can be used to track periods of inactivity for the project, or features that took a relatively long time to implement</i></p>
-                    <p>Click on a commit to view detailed information.</p>
+                    <Accordion className="App__MainContent__Accordian">
+                      <Card>
+                        <Accordion.Toggle
+                          as={Card.Header}
+                          variant="link"
+                          eventKey="0"
+
+                        >
+                          <div style={{textAlign: "right"}} className="text-info">More Info</div>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="0">
+                          {/* <Card.Body>
+                            Shows the time between a given commit and the
+                            previous commit in days, using up to the most recent
+                            20 commits. Lower is better, with a score of 0
+                            indicating that the two commits occurred on the same
+                            day. This graph can be used to track periods of
+                            inactivity for the project, or features that took a
+                            relatively long time to implement.Click on a commit
+                            to view detailed information.
+                          </Card.Body> */}
+                          <ListGroup className="list-group-flush">
+                            <ListGroupItem className="text-muted">
+                              Shows the time between a given commit and the
+                              previous commit in days, using up to the most
+                              recent 20 commits. Lower is better, with a score
+                              of 0 indicating that the two commits occurred on
+                              the same day. This graph can be used to track
+                              periods of inactivity for the project, or features
+                              that took a relatively long time to implement.
+                            </ListGroupItem>
+                            <ListGroupItem  className="text-secondary">
+                              Click on a commit to view detailed information.
+                            </ListGroupItem>
+                          </ListGroup>
+                        </Accordion.Collapse>
+                      </Card>
+                    </Accordion>
+                    <p>
+                      <i></i>
+                    </p>
+                    <p></p>
                   </Row>
                   <Row className="main-content-row">
                     <CommitGraph commitData={curRepoCommitData}></CommitGraph>
                   </Row>
                 </Container>
-                <Container
-                  fluid
-                  className="App__MainContent__Container"
-                >
+                <Container fluid className="App__MainContent__Container">
                   <Row>
                     <h3 className="main-content-header">
                       Language breakdown for <strong>{curRepo.name}</strong>
                     </h3>
                   </Row>
                   <Row className="main-content-row">
-                    <p>
+                    <Accordion className="App__MainContent__Accordian">
+                      <Card>
+                        <Accordion.Toggle
+                          as={Card.Header}
+                          variant="link"
+                          eventKey="0"
+                        >
+                          <div style={{textAlign: "right"}} className="text-info">More Info</div>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="0">
+                          <Card.Body>
+                            Compares languages used in the repo by lines of code
+                            (KBs)
+                          </Card.Body>
+                        </Accordion.Collapse>
+                      </Card>
+                    </Accordion>
+                    {/* <p>
                       <i>
                         Compares languages used in the repo by lines of code
                         (KBs)
                       </i>
-                    </p>
+                    </p> */}
                   </Row>
                   <Row>
                     <LanguagePiechart
