@@ -9,7 +9,6 @@ userRouter.get("/", (req, res) => {
 
 // get a user
 userRouter.get("/:username", async (req, res) => {
-
   try {
     const responseBody = await getUserData(req.params.username);
 
@@ -31,14 +30,14 @@ userRouter.get("/:username/repo", async (req, res) => {
 
     // need to check that the user exists before continuing => total_count > 0
     if (userResponseBody && userResponseBody.total_count > 0) {
-        const repoUrl = userResponseBody.items[0].repos_url;
-        console.log(repoUrl);
+      const repoUrl = userResponseBody.items[0].repos_url;
+      console.log(repoUrl);
 
-        const repoResponseBody = await getRepoData(repoUrl);
+      const repoResponseBody = await getRepoData(repoUrl);
 
-        res.send(repoResponseBody);
+      res.send(repoResponseBody);
     } else {
-        res.send(`Error - does user ${req.params.username} exist?`);
+      res.send(`Error - does user ${req.params.username} exist?`);
     }
   } catch (err) {
     console.log(err);
@@ -48,9 +47,11 @@ userRouter.get("/:username/repo", async (req, res) => {
 // get a particular repo's languages:
 userRouter.get("/:username/:repo/languages", async (req, res) => {
   try {
-
-    const languagesRes = await getLanguageData(req.params.username, req.params.repo);
-    console.log("FROM ROUTE: \n\n"+ JSON.stringify(languagesRes))
+    const languagesRes = await getLanguageData(
+      req.params.username,
+      req.params.repo
+    );
+    console.log("FROM ROUTE: \n\n" + JSON.stringify(languagesRes));
 
     res.send(languagesRes);
     // res.send(JSON.stringify({
@@ -58,6 +59,22 @@ userRouter.get("/:username/:repo/languages", async (req, res) => {
     //   repo: req.params.repo,
     //   getting: "languages"
     // }));
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+// fetch most recent 'amount' commits for the given repo
+userRouter.get("/:username/:repo/commits/:amount", async (req, res) => {
+  try {
+    res.send(
+      JSON.stringify({
+        username: req.params.username,
+        repo: req.params.repo,
+        getting: "commits",
+        amount: req.params.amount,
+      })
+    );
   } catch (err) {
     console.log(err);
   }
@@ -81,30 +98,26 @@ async function getUserData(username) {
   }
 }
 
-// makes a request for a repo based on a url obtained 
-//  by querying API for a username 
+// makes a request for a repo based on a url obtained
+//  by querying API for a username
 async function getRepoData(repoUrl) {
-    try {
-        const res = await axios.get(
-          `${repoUrl}`,
-          {
-            headers: {
-              Authorization: `token ${process.env.PAT}`,
-            },
-          }
-        );
-        //return response.items[0].login+":"+response.items[0].id;
-        console.log("FROM REPO FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
-        return res.data;
-      } catch (err) {
-        console.log(err);
-      }
+  try {
+    const res = await axios.get(`${repoUrl}`, {
+      headers: {
+        Authorization: `token ${process.env.PAT}`,
+      },
+    });
+    //return response.items[0].login+":"+response.items[0].id;
+    console.log("FROM REPO FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
+    return res.data;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 // fetch the language data for a particular repo
 async function getLanguageData(username, repo) {
   try {
-
     const res = await axios.get(
       `https://api.github.com/repos/${username}/${repo}/languages`,
       {
@@ -113,7 +126,9 @@ async function getLanguageData(username, repo) {
         },
       }
     );
-    console.log("FROM LANGUAGE FETCHING FUNCTION: \n\n" + JSON.stringify(res.data));
+    console.log(
+      "FROM LANGUAGE FETCHING FUNCTION: \n\n" + JSON.stringify(res.data)
+    );
     return res.data;
   } catch (err) {
     console.log(err);

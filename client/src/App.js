@@ -28,7 +28,6 @@ const RADIAL_CHART_COLOURS = [
 
 function App() {
   const [debug, setDebug] = useState(true);
-  const [serverResponses, setServerResponses] = useState([]);
 
   // text field
   const [username, setUsername] = useState("");
