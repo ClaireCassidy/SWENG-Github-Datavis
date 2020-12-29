@@ -45,7 +45,8 @@ function App() {
   const [languageDataLoading, setLanguageDataLoading] = useState(false);
   const [repoLanguageData, setRepoLanguageData] = useState({}); // used to render the radial chart
   // commit data for curRepo
-  const [curRepoCommits, setCurRepoCommits] = useState([]);
+  const [commitDataLoading, setCommitDataLoading] = useState(false);
+  const [curRepoCommitData, setcurRepoCommitData] = useState([]);
 
   // just the info we need from a Repo response for the sidebar
   function RepoConcise(name, url) {
@@ -78,6 +79,22 @@ function App() {
 
     return languagesFormatted;
   };
+
+  const parseCommitInfo = (commitInfo) => {
+    
+    const commitInfoFormatted = [];
+
+    commitInfo.forEach((commit, index) => {
+      commitInfoFormatted.push({
+        name: "Commit "+index,
+        timeBetween: index*100
+      })
+    })
+
+    console.log(JSON.stringify(commitInfoFormatted));
+    return commitInfoFormatted;
+
+  }
 
   const getReposForUsername = () => {
     if (username) {
@@ -127,14 +144,16 @@ function App() {
     // set the active repo
     setCurRepo(repo);
     setRepoActive(true);
+
+    // pending API response
     setLanguageDataLoading(true);
+    setCommitDataLoading(true);
 
     // fetch the language data from api
     axios
       .get(`/user/${submittedUsername}/${repo.name}/languages`)
       .then((res) => {
         console.log(res.data);
-        setLanguageDataLoading(false);
 
         let languageInfo = res.data;
 
@@ -144,6 +163,8 @@ function App() {
         }
 
         setRepoLanguageData(languageInfo); // may be empty object
+        setLanguageDataLoading(false);
+
       })
       .catch((error) => {
         setLanguageDataLoading(false);
@@ -151,6 +172,27 @@ function App() {
       });
 
       // fetch the commit data from the API
+      axios
+      .get(`/user/${submittedUsername}/${repo.name}/commits/20`)
+      .then((res) => {
+        console.log(res.data);
+        setCommitDataLoading(false);
+
+        // could be empty object
+        let commitInfo = res.data;
+
+        if (commitInfo.length > 0) { // if we have any commits ...
+          commitInfo = parseCommitInfo(commitInfo);
+          console.log(commitInfo);
+        }
+
+        setcurRepoCommitData(commitInfo);
+
+      })
+      .catch((error) => {
+        setCommitDataLoading(false);
+        console.log(error);
+      });
   };
 
   return (
@@ -317,7 +359,7 @@ function App() {
                   </h2>
                 </Row>
                 <Row>
-                  <CommitGraph repo={curRepo}></CommitGraph>
+                  <CommitGraph commitData={curRepoCommitData}></CommitGraph>
                 </Row>
                 <Container fluid className="App__MainContent__LanguagesContainer">
                   <Row>

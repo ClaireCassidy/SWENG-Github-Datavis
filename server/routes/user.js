@@ -67,7 +67,6 @@ userRouter.get("/:username/:repo/languages", async (req, res) => {
 // fetch most recent 'amount' commits for the given repo
 userRouter.get("/:username/:repo/commits/:amount", async (req, res) => {
   try {
-    //api.github.com/repos/esjmb/yesod/commits?per_page=20
     const commitsRes = await getNCommits(req.params.username, req.params.repo, req.params.amount);
     console.log("FROM ROUTE: \n\n" + JSON.stringify(commitsRes));
 
