@@ -26,7 +26,7 @@ export default function LanguagePiechart({ languageInfo, loading }) {
       )}
       {!loading && noData && <p>[Didn't detect any programming languages]</p>}
 
-      {!noData && (
+      {!noData && !loading && (
         <RadialBarChart
           width={1000}
           height={350}
@@ -52,10 +52,10 @@ export default function LanguagePiechart({ languageInfo, loading }) {
             align="right"
             iconType="circle"
           />
-          <Tooltip labelFormatter={(index) => languageInfo[index].name} />
+          <Tooltip labelFormatter={(index) => languageInfo[index].name + " (KBs)"} />
         </RadialBarChart>
       )}
     </>
   );
-  
+
 }

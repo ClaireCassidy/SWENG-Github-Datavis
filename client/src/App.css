@@ -62,6 +62,15 @@
     /* text-decoration: underline; */
 }
 
+.App__MainContent__LanguagesContainer {
+    /* border: 1px solid blue; */
+}
+
+.languages-header {
+    /* border: 1px solid red; */
+    margin-left: 0px;
+}
+
 .App__Sidebar__Repos {
   /* border: 1px solid green; */
   padding: 0px !important;

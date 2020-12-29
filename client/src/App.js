@@ -316,13 +316,22 @@ function App() {
                 <Row>
                   <CommitGraph repo={curRepo}></CommitGraph>
                 </Row>
-                <Row className="App__MainContent__LanguagesContainer">
-                  <h3>Language breakdown for <strong>{curRepo.name}</strong></h3>
-                  <LanguagePiechart
-                    languageInfo={repoLanguageData}
-                    loading={languageDataLoading}
-                  ></LanguagePiechart>
-                </Row>
+                <Container fluid className="App__MainContent__LanguagesContainer">
+                  <Row>
+                    <h3 className="languages-header">
+                      Language breakdown for <strong>{curRepo.name}</strong>
+                    </h3>
+                  </Row>
+                  <Row>
+                    <p><i>Compares languages used in the repo by lines of code (KBs)</i></p>
+                  </Row>
+                  <Row>
+                    <LanguagePiechart
+                      languageInfo={repoLanguageData}
+                      loading={languageDataLoading}
+                    />{" "}
+                  </Row>
+                </Container>
               </Container>
             )}
           </Col>
