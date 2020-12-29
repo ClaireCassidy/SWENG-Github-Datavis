@@ -50,6 +50,7 @@
 
 .App__MainContent__Header {
     /* letter-spacing: 1px; */
+    margin-bottom: 2em;
 }
 
 .header-weak {
@@ -62,13 +63,22 @@
     /* text-decoration: underline; */
 }
 
-.App__MainContent__LanguagesContainer {
-    /* border: 1px solid blue; */
+.App__MainContent__Container {
+    border: 1px solid #f7f7f7;  
+    padding-bottom: 40px;
 }
 
-.languages-header {
+.main-content-header {
     /* border: 1px solid red; */
     margin-left: 0px;
+    width: 100%;
+    padding: 0.3em;
+    background-color: #f7f7f7;
+}
+
+.main-content-row {
+    padding-left: 10px;
+    /* border: 1px solid #f7f7f7; */
 }
 
 .App__Sidebar__Repos {

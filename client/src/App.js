@@ -81,20 +81,43 @@ function App() {
   };
 
   const parseCommitInfo = (commitInfo) => {
-    
+    // default commits are most recent - oldest; reverse order for calculations
+    const commitInfoReversed = commitInfo.slice().reverse();
     const commitInfoFormatted = [];
 
-    commitInfo.forEach((commit, index) => {
+    commitInfo.forEach((curCommit, index) => {
+      // time between this commit and the previous commit
+      let timeBetweenMillis = 0;
+
+      // console.log("COMMIT "+index);
+
+      const timeThisCommit = new Date(curCommit.commit.author.date);
+      // console.log("TIME THIS COMMIT: "+timeThisCommit);
+
+      let timeBetweenDays = 0;
+
+      if (index !== 0) {
+        // avoid index oob
+        const timePreviousCommit = new Date(
+          commitInfo[index - 1].commit.author.date
+        );
+        timeBetweenMillis = Math.abs(
+          timeThisCommit.getTime() - timePreviousCommit.getTime()
+        );
+        timeBetweenDays = Math.round(timeBetweenMillis / (1000 * 60 * 60 * 24));
+      }
+
+      // console.log(`\tDIFF: ${timeBetweenMillis} (${timeBetweenDays} days)`);
+
       commitInfoFormatted.push({
-        name: "Commit "+index,
-        timeBetween: index*100
-      })
-    })
+        name: "Commit " + index,
+        timeBetween: timeBetweenDays,
+      });
+    });
 
-    console.log(JSON.stringify(commitInfoFormatted));
+    //console.log(JSON.stringify(commitInfoFormatted));
     return commitInfoFormatted;
-
-  }
+  };
 
   const getReposForUsername = () => {
     if (username) {
@@ -153,41 +176,40 @@ function App() {
     axios
       .get(`/user/${submittedUsername}/${repo.name}/languages`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
 
         let languageInfo = res.data;
 
         if (!(Object.keys(languageInfo).length === 0)) {
           languageInfo = parseLanguageInfo(languageInfo);
-          console.log(languageInfo);
+          //console.log(languageInfo);
         }
 
         setRepoLanguageData(languageInfo); // may be empty object
         setLanguageDataLoading(false);
-
       })
       .catch((error) => {
         setLanguageDataLoading(false);
         console.log(error);
       });
 
-      // fetch the commit data from the API
-      axios
+    // fetch the commit data from the API
+    axios
       .get(`/user/${submittedUsername}/${repo.name}/commits/20`)
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
         setCommitDataLoading(false);
 
         // could be empty object
         let commitInfo = res.data;
 
-        if (commitInfo.length > 0) { // if we have any commits ...
+        if (commitInfo.length > 0) {
+          // if we have any commits ...
           commitInfo = parseCommitInfo(commitInfo);
           console.log(commitInfo);
         }
 
         setcurRepoCommitData(commitInfo);
-
       })
       .catch((error) => {
         setCommitDataLoading(false);
@@ -358,17 +380,37 @@ function App() {
                     </span>
                   </h2>
                 </Row>
-                <Row>
-                  <CommitGraph commitData={curRepoCommitData}></CommitGraph>
-                </Row>
-                <Container fluid className="App__MainContent__LanguagesContainer">
+                <Container
+                  fluid
+                  className="App__MainContent__Container"
+                >
                   <Row>
-                    <h3 className="languages-header">
+                    <h3 className="main-content-header">Commit Density for <strong>{curRepo.name}</strong></h3>
+                  </Row>
+                  <Row className="main-content-row">
+                    <p><i>Shows the time between a given commit and the previous commit in days. Lower is better, with a score of 0 indicating that this commit and the previous commit occurred on the same day. This can be used to track periods of inactivity for the project, or features that took a relatively long time to implement</i></p>
+                    <p>Click on a commit to view detailed information.</p>
+                  </Row>
+                  <Row className="main-content-row">
+                    <CommitGraph commitData={curRepoCommitData}></CommitGraph>
+                  </Row>
+                </Container>
+                <Container
+                  fluid
+                  className="App__MainContent__Container"
+                >
+                  <Row>
+                    <h3 className="main-content-header">
                       Language breakdown for <strong>{curRepo.name}</strong>
                     </h3>
                   </Row>
-                  <Row>
-                    <p><i>Compares languages used in the repo by lines of code (KBs)</i></p>
+                  <Row className="main-content-row">
+                    <p>
+                      <i>
+                        Compares languages used in the repo by lines of code
+                        (KBs)
+                      </i>
+                    </p>
                   </Row>
                   <Row>
                     <LanguagePiechart
