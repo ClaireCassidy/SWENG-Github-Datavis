@@ -58,7 +58,11 @@ function App() {
     let kvps = Object.entries(languageInfo);
     console.log(kvps);
 
-    for (let i=0; i< Math.min(kvps.length, RADIAL_CHART_COLOURS.length); i++) {
+    for (
+      let i = 0;
+      i < Math.min(kvps.length, RADIAL_CHART_COLOURS.length);
+      i++
+    ) {
       console.log(kvps[i]);
       const [language, size] = kvps[i];
       console.log(`Language: ${language}, Size: ${size}`);
@@ -66,7 +70,7 @@ function App() {
       languagesFormatted.push({
         name: language,
         size: size,
-        fill: RADIAL_CHART_COLOURS[i]
+        fill: RADIAL_CHART_COLOURS[i],
       });
     }
 
@@ -301,12 +305,16 @@ function App() {
                         </a>
                       </strong>
                     </span>
-                    {debug && <p>{curRepo.url}</p>}
                   </h2>
                 </Row>
                 <Row>
                   <CommitGraph repo={curRepo}></CommitGraph>
-                  <LanguagePiechart languageInfo={repoLanguageData}></LanguagePiechart>
+                </Row>
+                <Row>
+                  <h2>Language Breakdown for <strong>{curRepo.name}</strong></h2>
+                  <LanguagePiechart
+                    languageInfo={repoLanguageData}
+                  ></LanguagePiechart>
                 </Row>
               </Container>
             )}
