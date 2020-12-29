@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { RadialBarChart, RadialBar, Legend, Tooltip } from "recharts";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 
-export default function LanguagePiechart({ languageInfo }) {
+export default function LanguagePiechart({ languageInfo, loading }) {
+  const [noData, setNoData] = useState(true);
+
   useEffect(() => {
     console.log(`FROM PIECHART: ${JSON.stringify(languageInfo)}`);
+
+    // check if received empty object or null object for language data
+    setNoData(
+      (Object.keys(languageInfo).length === 0 &&
+        languageInfo.constructor === Object) ||
+        languageInfo === null
+    );
   }, [languageInfo]);
 
-  //     const data = [
-  //     {
-  //       name: "java",
-  //       size: 1443,
-  //       fill: "#8884d8",
-  //     },
-  //     {
-  //       name: "python",
-  //       size: 2441,
-  //       fill: "#83a6ed",
-  //     },
-  //   ];
-
   return (
-    <Container>
-      <Row>
+    <>
+      {loading && (
+        <Spinner animation="border" role="status" variant="info">
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      )}
+      {!loading && noData && <p>[Didn't detect any programming languages]</p>}
+
+      {!noData && (
         <RadialBarChart
           width={1000}
           height={350}
@@ -51,7 +54,7 @@ export default function LanguagePiechart({ languageInfo }) {
           />
           <Tooltip />
         </RadialBarChart>
-      </Row>
-    </Container>
+      )}
+    </>
   );
 }
