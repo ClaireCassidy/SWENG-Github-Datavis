@@ -21,7 +21,7 @@ export default function CommitGraph({ commitData }) {
 
   const parseDayData = (commits) => {
     if (Array.isArray(commits) && commits.length > 0) {
-      let dateCountArray = []; // objs of type {date: ..., count: ...}
+      let dateCountArray = []; // objs of type {date: ..., count: ..., indices: ...}
 
       const commitDates = []; // ISO strings converted to Date objects
 
@@ -31,9 +31,9 @@ export default function CommitGraph({ commitData }) {
       });
 
       // tally unique dates
-      commitDates.forEach((date) => {
+      commitDates.forEach((date, index) => {
         // check if date already in dateCountArray
-        updateDateCount(date, dateCountArray);
+        updateDateCount(date, dateCountArray, index);
       });
 
       //finally, stringify each date so it can be displayed
@@ -41,6 +41,7 @@ export default function CommitGraph({ commitData }) {
         return {
           date: obj.date.toDateString(),
           count: obj.count,
+          indices: obj.indices.slice()
         };
       });
 
@@ -51,12 +52,13 @@ export default function CommitGraph({ commitData }) {
     }
   };
 
-  const updateDateCount = (date, arr) => {
+  const updateDateCount = (date, arr, index) => {
     let dateFound = false;
 
     for (let i = 0; i < arr.length; i++) {
       if (sameDay(date, arr[i].date)) {
         arr[i].count = arr[i].count + 1; // increment number of occurences
+        arr[i].indices.push(index); // track the index
         dateFound = true;
         break;
       }
@@ -67,6 +69,7 @@ export default function CommitGraph({ commitData }) {
       arr.push({
         date: date,
         count: 1,
+        indices: [index]
       });
     }
   };
@@ -79,6 +82,10 @@ export default function CommitGraph({ commitData }) {
     );
   };
 
+  const handleBarClick = (data, index) => {
+      console.log(`Data: ${JSON.stringify(data)}\nIndex: ${index}`);
+  }
+
   return (
     <>
       {dayData && dayData.length > 0 && (
@@ -88,7 +95,7 @@ export default function CommitGraph({ commitData }) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Bar dataKey="count" fill="#8884d8" />
+          <Bar dataKey="count" fill="#8884d8" onClick={handleBarClick}/>
           {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
         </BarChart>
       )}
