@@ -19,7 +19,7 @@ export default function CommitGraph({ commitData }) {
 
   const parseDayData = (commits) => {
     if (Array.isArray(commits) && commits.length > 0) {
-      const dateCountArray = []; // objs of type {date: ..., count: ...}
+      let dateCountArray = []; // objs of type {date: ..., count: ...}
 
       const commitDates = []; // ISO strings converted to Date objects
 
@@ -33,6 +33,14 @@ export default function CommitGraph({ commitData }) {
         // check if date already in dateCountArray
         updateDateCount(date, dateCountArray);
       });
+
+      //finally, stringify each date so it can be displayed
+      dateCountArray = dateCountArray.map((obj, index) => {
+        return {
+            date: obj.date.toString(),
+            count: obj.count
+        }
+      })
 
       console.log(JSON.stringify(dateCountArray));
 
@@ -75,7 +83,7 @@ export default function CommitGraph({ commitData }) {
       {dayData && dayData.length > 0 && (
         <BarChart width={730} height={250} data={dayData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
+          <XAxis dataKey="date" />
           <YAxis />
           <Tooltip />
           <Legend />
