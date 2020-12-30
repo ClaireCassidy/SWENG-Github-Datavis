@@ -88,6 +88,7 @@ function App() {
     return languagesFormatted;
   };
 
+  // Extracts the relevant information from repository's commits
   const parseCommitInfo = (commitInfo) => {
     // default commits are most recent - oldest; reverse order for calculations
     const commitInfoReversed = commitInfo.slice().reverse();
@@ -100,6 +101,14 @@ function App() {
       // console.log("COMMIT "+index);
 
       const dateISO = curCommit.commit.author.date; // date as ISO string
+      const authorName = curCommit.commit.author.name;
+      const authorAccountUrl = curCommit.author.html_url;
+      const message = curCommit.commit.message;
+      const commitUrl = curCommit.htmlUrl;
+      const commentCount = curCommit.commit.comment_count;
+      const authorAvatarUrl = curCommit.author.avatar_url;
+
+
       console.log(`Date ISO: ${dateISO}`);
       const timeThisCommit = new Date(curCommit.commit.author.date);
       // console.log("TIME THIS COMMIT: "+timeThisCommit);
@@ -124,10 +133,16 @@ function App() {
         name: "Commit " + index,
         timeBetween: timeBetweenDays,
         dateISO: dateISO,
+        authorName: authorName,
+        authorAccountUrl: authorAccountUrl,
+        message: message,
+        commitUrl: commitUrl,
+        commentCount: commentCount,
+        authorAvatarUrl: authorAvatarUrl
       });
     });
 
-    //console.log(JSON.stringify(commitInfoFormatted));
+    console.log(JSON.stringify(commitInfoFormatted));
     return commitInfoFormatted;
   };
 
@@ -511,7 +526,7 @@ function App() {
                           <Card.Body>
                             Compares languages used in the repo by quanity of
                             code (KBs). The inner bar represents the most
-                            utilised languages, and the outer bars show the
+                            utilised language, and the outer bars show the
                             fractional use of other languages relative to this
                             most popular language
                           </Card.Body>

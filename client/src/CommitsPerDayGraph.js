@@ -118,7 +118,6 @@ export default function CommitGraph({ commitData }) {
                               console.log(JSON.stringify(commitData[i]));
                               return (<p key={index}>{JSON.stringify(commitData[i])}</p>)
                           })}
-                        {/* <p>{JSON.stringify(dayData[activeBarIndex])}</p> */}
                       </Card.Body>
                     )}
                     {/* Bar Not Selected */}
