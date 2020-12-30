@@ -92,33 +92,37 @@ function App() {
     const commitInfoReversed = commitInfo.slice().reverse();
     const commitInfoFormatted = [];
 
-    commitInfo.forEach((curCommit, index) => {
+    commitInfoReversed.forEach((curCommit, index) => {
       // time between this commit and the previous commit
       let timeBetweenMillis = 0;
 
       // console.log("COMMIT "+index);
 
+      const dateISO = curCommit.commit.author.date; // date as ISO string
+      console.log(`Date ISO: ${dateISO}`);
       const timeThisCommit = new Date(curCommit.commit.author.date);
-      // console.log("TIME THIS COMMIT: "+timeThisCommit);
+      console.log("TIME THIS COMMIT: "+timeThisCommit);
 
       let timeBetweenDays = 0;
 
       if (index !== 0) {
         // avoid index oob
         const timePreviousCommit = new Date(
-          commitInfo[index - 1].commit.author.date
+          commitInfoReversed[index - 1].commit.author.date
         );
+        console.log(`TIME PREVIOUS COMMIT: ${timePreviousCommit}`);
         timeBetweenMillis = Math.abs(
           timeThisCommit.getTime() - timePreviousCommit.getTime()
         );
         timeBetweenDays = Math.round(timeBetweenMillis / (1000 * 60 * 60 * 24));
       }
 
-      // console.log(`\tDIFF: ${timeBetweenMillis} (${timeBetweenDays} days)`);
+      console.log(`\tDIFF: ${timeBetweenMillis} (${timeBetweenDays} days)`);
 
       commitInfoFormatted.push({
         name: "Commit " + index,
         timeBetween: timeBetweenDays,
+        dateISO: dateISO
       });
     });
 
@@ -388,6 +392,40 @@ function App() {
                     </span>
                   </h2>
                 </Row>
+                {/* Commits Per Day */}
+                <Container fluid className="App__MainContent__Container">
+                  <Row>
+                    <h3 className="main-content-header">
+                      Commits Per Day for <strong>{curRepo.name}</strong>
+                    </h3>
+                  </Row>
+                  <Row className="main-content-row">
+                    <Accordion className="App__MainContent__Accordian">
+                      <Card>
+                        <Accordion.Toggle
+                          as={Card.Header}
+                          variant="link"
+                          eventKey="0"
+
+                        >
+                          <div style={{textAlign: "right"}} className="text-info">More Info</div>
+                        </Accordion.Toggle>
+                        <Accordion.Collapse eventKey="0">
+                          <ListGroup className="list-group-flush">
+                            <ListGroupItem className="text-muted">
+                              [To-do]
+                            </ListGroupItem>
+                            <ListGroupItem  className="text-secondary">
+                              Click on a commit to view detailed information.
+                            </ListGroupItem>
+                          </ListGroup>
+                        </Accordion.Collapse>
+                      </Card>
+                    </Accordion>
+                  </Row>
+                </Container>
+
+                {/* Commit Density */}
                 <Container fluid className="App__MainContent__Container">
                   <Row>
                     <h3 className="main-content-header">
@@ -406,16 +444,6 @@ function App() {
                           <div style={{textAlign: "right"}} className="text-info">More Info</div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
-                          {/* <Card.Body>
-                            Shows the time between a given commit and the
-                            previous commit in days, using up to the most recent
-                            20 commits. Lower is better, with a score of 0
-                            indicating that the two commits occurred on the same
-                            day. This graph can be used to track periods of
-                            inactivity for the project, or features that took a
-                            relatively long time to implement.Click on a commit
-                            to view detailed information.
-                          </Card.Body> */}
                           <ListGroup className="list-group-flush">
                             <ListGroupItem className="text-muted">
                               Shows the time between a given commit and the
@@ -433,15 +461,13 @@ function App() {
                         </Accordion.Collapse>
                       </Card>
                     </Accordion>
-                    <p>
-                      <i></i>
-                    </p>
-                    <p></p>
                   </Row>
                   <Row className="main-content-row">
                     <CommitGraph commitData={curRepoCommitData}></CommitGraph>
                   </Row>
                 </Container>
+
+                {/* Language Breakdown */}
                 <Container fluid className="App__MainContent__Container">
                   <Row>
                     <h3 className="main-content-header">

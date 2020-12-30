@@ -22,7 +22,7 @@ export default function CommitGraph({ commitData }) {
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="name" />
       <YAxis dataKey="timeBetween"/>
-      <Tooltip labelFormatter={() => "Click to see more"}/>
+      <Tooltip labelFormatter={() => "Click datapoint to see more"}/>
       <Legend />
       <Line type="monotone" dataKey="timeBetween" stroke="#8884d8" activeDot={{onClick: (index)=> {console.log("CLICKED"+JSON.stringify(index))}}}/>
     </LineChart>
