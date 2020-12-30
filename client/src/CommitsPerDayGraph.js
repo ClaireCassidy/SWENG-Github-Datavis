@@ -9,6 +9,8 @@ import {
   Bar,
 } from "recharts";
 import { Container, Row, Col, Accordion, Card } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 
 export default function CommitGraph({ commitData }) {
   const [dayData, setDayData] = useState([]);
@@ -114,10 +116,39 @@ export default function CommitGraph({ commitData }) {
                     {/* Bar Selected */}
                     {barSelected && activeBarIndex >= 0 && (
                       <Card.Body>
-                          {dayData[activeBarIndex].indices.map((i, index) => {
-                              console.log(JSON.stringify(commitData[i]));
-                              return (<p key={index}>{JSON.stringify(commitData[i])}</p>)
-                          })}
+                        {dayData[activeBarIndex].indices.map((i, index) => {
+                          const curCommit = commitData[i];
+                          return (
+                            <div key={index} style={{border: "1px solid black", margin: "2px"}}>
+                              <Container fluid>
+                                <Row>
+                                  <Col>
+                                    <img
+                                      src={curCommit.authorAvatarUrl}
+                                      style={{ width: "32px", height: "32px" }}
+                                    />
+                                  </Col>
+                                  <Col>
+                                    <h5>{curCommit.authorName}</h5>
+                                  </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    <p>{curCommit.message}</p>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <p>Comment Count: {curCommit.commentCount}</p>
+                                    </Col>
+                                    <Col>
+                                        <p>Date: {(new Date(curCommit.dateISO)).toString()}</p>
+                                    </Col>
+                                </Row>
+                              </Container>
+                            </div>
+                          );
+                        })}
                       </Card.Body>
                     )}
                     {/* Bar Not Selected */}
