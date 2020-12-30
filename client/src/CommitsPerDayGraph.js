@@ -8,14 +8,18 @@ import {
   Legend,
   Bar,
 } from "recharts";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Accordion, Card } from "react-bootstrap";
 
 export default function CommitGraph({ commitData }) {
   const [dayData, setDayData] = useState([]);
 
-  const [detailedInfoActive, setDetailedInfoActive] = useState(false);
+  //const [detailedInfoActive, setDetailedInfoActive] = useState(false);
+  const [barSelected, setBarSelected] = useState(false);
+  const [activeBarIndex, setActiveBarIndex] = useState(0);
 
   useEffect(() => {
+    setBarSelected(false);
+    setActiveBarIndex(0);
     setDayData(parseDayData(commitData));
   }, [commitData]);
 
@@ -41,14 +45,13 @@ export default function CommitGraph({ commitData }) {
         return {
           date: obj.date.toDateString(),
           count: obj.count,
-          indices: obj.indices.slice()
+          indices: obj.indices.slice(),
         };
       });
 
       console.log(JSON.stringify(dateCountArray));
 
       return dateCountArray;
-      //   setDayData(dateCountArray);
     }
   };
 
@@ -69,7 +72,7 @@ export default function CommitGraph({ commitData }) {
       arr.push({
         date: date,
         count: 1,
-        indices: [index]
+        indices: [index],
       });
     }
   };
@@ -83,21 +86,49 @@ export default function CommitGraph({ commitData }) {
   };
 
   const handleBarClick = (data, index) => {
-      console.log(`Data: ${JSON.stringify(data)}\nIndex: ${index}`);
-  }
+    console.log(`Data: ${JSON.stringify(data)}\nIndex: ${index}`);
+    setBarSelected(true);
+    setActiveBarIndex(index);
+  };
 
   return (
     <>
       {dayData && dayData.length > 0 && (
-        <BarChart width={730} height={250} data={dayData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="date" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="count" fill="#8884d8" onClick={handleBarClick}/>
-          {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
-        </BarChart>
+        <>
+          <Container>
+            <BarChart width={730} height={250} data={dayData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" fill="#8884d8" onClick={handleBarClick} />
+            </BarChart>
+            <Accordion>
+              <Card>
+                <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
+                  <div>More Details</div>
+                </Accordion.Toggle>
+                <Accordion.Collapse eventKey="0">
+                  <>
+                    {/* Bar Selected */}
+                    {barSelected && activeBarIndex >= 0 && (
+                      <Card.Body>
+                        <p>{JSON.stringify(dayData[activeBarIndex])}</p>
+                      </Card.Body>
+                    )}
+                    {/* Bar Not Selected */}
+                    {(!barSelected || activeBarIndex < 0) && (
+                      <Card.Body className="text-muted">
+                        [Select a bar to view more information]
+                      </Card.Body>
+                    )}
+                  </>
+                </Accordion.Collapse>
+              </Card>
+            </Accordion>
+          </Container>
+        </>
       )}
       {(!dayData || dayData.length === 0) && (
         <Container>
