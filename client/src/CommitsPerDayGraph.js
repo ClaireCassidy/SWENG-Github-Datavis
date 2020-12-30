@@ -11,7 +11,6 @@ import {
 import { Container, Row, Col, Accordion, Card } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-
 export default function CommitGraph({ commitData }) {
   const [dayData, setDayData] = useState([]);
 
@@ -20,6 +19,8 @@ export default function CommitGraph({ commitData }) {
   const [activeBarIndex, setActiveBarIndex] = useState(0);
 
   useEffect(() => {
+    console.log("COMMIT DATA CHANGED");
+    console.log(JSON.stringify(commitData));
     setBarSelected(false);
     setActiveBarIndex(0);
     setDayData(parseDayData(commitData));
@@ -106,7 +107,7 @@ export default function CommitGraph({ commitData }) {
               <Legend />
               <Bar dataKey="count" fill="#8884d8" onClick={handleBarClick} />
             </BarChart>
-            <Accordion>
+            <Accordion defaultActiveKey="0">
               <Card>
                 <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
                   <div>More Details</div>
@@ -118,36 +119,67 @@ export default function CommitGraph({ commitData }) {
                       <Card.Body>
                         {dayData[activeBarIndex].indices.map((i, index) => {
                           const curCommit = commitData[i];
+
+                          if (curCommit) {
+                              
+                          console.log(
+                            `Cur Commit: ${JSON.stringify(
+                              curCommit
+                            )}\ni: ${i}\nindex: ${index}`
+                          );
                           return (
-                            <div key={index} style={{border: "1px solid black", margin: "2px"}}>
+                            <div
+                              key={index}
+                              style={{
+                                borderBottom: "1px solid #d9e2ef",
+                                margin: "2px",
+                                paddingTop: "10px",
+                                backgroundColor: "#f1f4f8",
+                                borderRadius: "3px"
+                              }}
+                            >
                               <Container fluid>
                                 <Row>
                                   <Col>
-                                    <img
-                                      src={curCommit.authorAvatarUrl}
-                                      style={{ width: "32px", height: "32px" }}
-                                    />
+                                    <a href={curCommit.authorAccountUrl}>
+                                      <img
+                                        src={curCommit.authorAvatarUrl}
+                                        style={{
+                                          width: "32px",
+                                          height: "32px",
+                                        }}
+                                      />
+                                    </a>
                                   </Col>
                                   <Col>
-                                    <h5>{curCommit.authorName}</h5>
+                                    <a href={curCommit.authorAccountUrl}>
+                                      <h5>{curCommit.authorName}</h5>
+                                    </a>
+                                  </Col>
+                                  <Col><a href={curCommit.commitUrl}>Go to commit {'>'}</a></Col>
+                                </Row>
+                                <Row style={{paddingTop: "10px", backgroundColor: "white", margin: "5px 10px 10px 10px"}}>
+                                  <Col>
+                                    <p>{curCommit.message}</p>
                                   </Col>
                                 </Row>
                                 <Row>
-                                    <Col>
-                                    <p>{curCommit.message}</p>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col>
-                                        <p>Comment Count: {curCommit.commentCount}</p>
-                                    </Col>
-                                    <Col>
-                                        <p>Date: {(new Date(curCommit.dateISO)).toString()}</p>
-                                    </Col>
+                                  <Col>
+                                    <p>
+                                      Comment Count: {curCommit.commentCount}
+                                    </p>
+                                  </Col>
+                                  <Col>
+                                    <p>
+                                      Date:{" "}
+                                      {new Date(curCommit.dateISO).toString()}
+                                    </p>
+                                  </Col>
                                 </Row>
                               </Container>
                             </div>
                           );
+                        } else { return <></>}
                         })}
                       </Card.Body>
                     )}
@@ -168,7 +200,7 @@ export default function CommitGraph({ commitData }) {
         <Container>
           <Row>
             <Col>
-              <p>Something went wrong :(</p>
+              <p>Loading ...</p>
             </Col>
           </Row>
         </Container>

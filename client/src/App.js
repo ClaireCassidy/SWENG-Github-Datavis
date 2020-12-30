@@ -67,16 +67,16 @@ function App() {
 
     // array [{language: size}, ...]
     let kvps = Object.entries(languageInfo);
-    console.log(kvps);
+    // console.log(kvps);
 
     for (
       let i = 0;
       i < Math.min(kvps.length, RADIAL_CHART_COLOURS.length);
       i++
     ) {
-      console.log(kvps[i]);
+      // console.log(kvps[i]);
       const [language, size] = kvps[i];
-      console.log(`Language: ${language}, Size: ${size}`);
+      // console.log(`Language: ${language}, Size: ${size}`);
 
       languagesFormatted.push({
         name: language,
@@ -104,12 +104,12 @@ function App() {
       const authorName = curCommit.commit.author.name;
       const authorAccountUrl = curCommit.author.html_url;
       const message = curCommit.commit.message;
-      const commitUrl = curCommit.htmlUrl;
+      const commitUrl = curCommit.html_url;
       const commentCount = curCommit.commit.comment_count;
       const authorAvatarUrl = curCommit.author.avatar_url;
 
 
-      console.log(`Date ISO: ${dateISO}`);
+      // console.log(`Date ISO: ${dateISO}`);
       const timeThisCommit = new Date(curCommit.commit.author.date);
       // console.log("TIME THIS COMMIT: "+timeThisCommit);
 
@@ -233,7 +233,7 @@ function App() {
         if (commitInfo.length > 0) {
           // if we have any commits ...
           commitInfo = parseCommitInfo(commitInfo);
-          console.log(commitInfo);
+          // console.log(commitInfo);
         }
 
         setcurRepoCommitData(commitInfo);
