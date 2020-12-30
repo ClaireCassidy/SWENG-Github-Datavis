@@ -12,7 +12,7 @@ import {
   Card,
   Accordion,
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
 } from "react-bootstrap";
 import CommitGraph from "./CommitGraph";
 import CommitsPerDayGraph from "./CommitsPerDayGraph";
@@ -123,7 +123,7 @@ function App() {
       commitInfoFormatted.push({
         name: "Commit " + index,
         timeBetween: timeBetweenDays,
-        dateISO: dateISO
+        dateISO: dateISO,
       });
     });
 
@@ -409,17 +409,24 @@ function App() {
                           as={Card.Header}
                           variant="link"
                           eventKey="0"
-
                         >
-                          <div style={{textAlign: "right"}} className="text-info">More Info</div>
+                          <div
+                            style={{ textAlign: "right" }}
+                            className="text-info"
+                          >
+                            More Info
+                          </div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
                           <ListGroup className="list-group-flush">
-                            <ListGroupItem className="text-muted">
-                              [To-do]
+                            <ListGroupItem className="text-dark">
+                              Groups the repository's most recent 20 commits by
+                              their commit date. This graph helps give an
+                              overview of the most productive dates with
+                              resepect to recent activity in the repository
                             </ListGroupItem>
-                            <ListGroupItem  className="text-secondary">
-                              Click on a commit to view detailed information.
+                            <ListGroupItem className="text-secondary">
+                              Click on a date bar to view detailed information about a particular day.
                             </ListGroupItem>
                           </ListGroup>
                         </Accordion.Collapse>
@@ -427,7 +434,7 @@ function App() {
                     </Accordion>
                   </Row>
                   <Row className="main-content-row">
-                    <CommitsPerDayGraph commitData={curRepoCommitData}/>
+                    <CommitsPerDayGraph commitData={curRepoCommitData} />
                   </Row>
                 </Container>
 
@@ -445,22 +452,27 @@ function App() {
                           as={Card.Header}
                           variant="link"
                           eventKey="0"
-
                         >
-                          <div style={{textAlign: "right"}} className="text-info">More Info</div>
+                          <div
+                            style={{ textAlign: "right" }}
+                            className="text-info"
+                          >
+                            More Info
+                          </div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
                           <ListGroup className="list-group-flush">
-                            <ListGroupItem className="text-muted">
+                            <ListGroupItem className="text-dark">
                               Shows the time between a given commit and the
                               previous commit in days, using up to the most
                               recent 20 commits. Lower is better, with a score
                               of 0 indicating that the two commits occurred on
-                              the same day. This graph can be used to track
+                              the same day. Note that commits are in ascending
+                              order of recency. This graph can be used to track
                               periods of inactivity for the project, or features
                               that took a relatively long time to implement.
                             </ListGroupItem>
-                            <ListGroupItem  className="text-secondary">
+                            <ListGroupItem className="text-secondary">
                               Click on a commit to view detailed information.
                             </ListGroupItem>
                           </ListGroup>
@@ -481,19 +493,27 @@ function App() {
                     </h3>
                   </Row>
                   <Row className="main-content-row">
-                    <Accordion className="App__MainContent__Accordian">
+                    <Accordion className="App__MainContent__Accordian text-dark">
                       <Card>
                         <Accordion.Toggle
                           as={Card.Header}
                           variant="link"
                           eventKey="0"
                         >
-                          <div style={{textAlign: "right"}} className="text-info">More Info</div>
+                          <div
+                            style={{ textAlign: "right" }}
+                            className="text-info"
+                          >
+                            More Info
+                          </div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
                           <Card.Body>
-                            Compares languages used in the repo by lines of code
-                            (KBs)
+                            Compares languages used in the repo by quanity of
+                            code (KBs). The inner bar represents the most
+                            utilised languages, and the outer bars show the
+                            fractional use of other languages relative to this
+                            most popular language
                           </Card.Body>
                         </Accordion.Collapse>
                       </Card>

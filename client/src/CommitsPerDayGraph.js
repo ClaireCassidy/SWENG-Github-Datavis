@@ -8,10 +8,12 @@ import {
   Legend,
   Bar,
 } from "recharts";
+import { Container, Row, Col } from "react-bootstrap";
 
 export default function CommitGraph({ commitData }) {
-    
   const [dayData, setDayData] = useState([]);
+
+  const [detailedInfoActive, setDetailedInfoActive] = useState(false);
 
   useEffect(() => {
     setDayData(parseDayData(commitData));
@@ -37,15 +39,15 @@ export default function CommitGraph({ commitData }) {
       //finally, stringify each date so it can be displayed
       dateCountArray = dateCountArray.map((obj, index) => {
         return {
-            date: obj.date.toDateString(),
-            count: obj.count
-        }
-      })
+          date: obj.date.toDateString(),
+          count: obj.count,
+        };
+      });
 
       console.log(JSON.stringify(dateCountArray));
 
       return dateCountArray;
-    //   setDayData(dateCountArray);
+      //   setDayData(dateCountArray);
     }
   };
 
@@ -79,7 +81,6 @@ export default function CommitGraph({ commitData }) {
 
   return (
     <>
-      {console.log(dayData)}
       {dayData && dayData.length > 0 && (
         <BarChart width={730} height={250} data={dayData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -90,6 +91,15 @@ export default function CommitGraph({ commitData }) {
           <Bar dataKey="count" fill="#8884d8" />
           {/* <Bar dataKey="uv" fill="#82ca9d" /> */}
         </BarChart>
+      )}
+      {(!dayData || dayData.length === 0) && (
+        <Container>
+          <Row>
+            <Col>
+              <p>Something went wrong :(</p>
+            </Col>
+          </Row>
+        </Container>
       )}
     </>
   );
