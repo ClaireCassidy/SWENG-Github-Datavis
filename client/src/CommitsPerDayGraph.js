@@ -37,7 +37,7 @@ export default function CommitGraph({ commitData }) {
       //finally, stringify each date so it can be displayed
       dateCountArray = dateCountArray.map((obj, index) => {
         return {
-            date: obj.date.toString(),
+            date: obj.date.toDateString(),
             count: obj.count
         }
       })
