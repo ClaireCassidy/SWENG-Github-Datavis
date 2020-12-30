@@ -15,6 +15,7 @@ import {
   ListGroupItem
 } from "react-bootstrap";
 import CommitGraph from "./CommitGraph";
+import CommitsPerDayGraph from "./CommitsPerDayGraph";
 import LanguagePiechart from "./LanguagePiechart";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -101,7 +102,7 @@ function App() {
       const dateISO = curCommit.commit.author.date; // date as ISO string
       console.log(`Date ISO: ${dateISO}`);
       const timeThisCommit = new Date(curCommit.commit.author.date);
-      console.log("TIME THIS COMMIT: "+timeThisCommit);
+      // console.log("TIME THIS COMMIT: "+timeThisCommit);
 
       let timeBetweenDays = 0;
 
@@ -110,14 +111,14 @@ function App() {
         const timePreviousCommit = new Date(
           commitInfoReversed[index - 1].commit.author.date
         );
-        console.log(`TIME PREVIOUS COMMIT: ${timePreviousCommit}`);
+        // console.log(`TIME PREVIOUS COMMIT: ${timePreviousCommit}`);
         timeBetweenMillis = Math.abs(
           timeThisCommit.getTime() - timePreviousCommit.getTime()
         );
         timeBetweenDays = Math.round(timeBetweenMillis / (1000 * 60 * 60 * 24));
       }
 
-      console.log(`\tDIFF: ${timeBetweenMillis} (${timeBetweenDays} days)`);
+      // console.log(`\tDIFF: ${timeBetweenMillis} (${timeBetweenDays} days)`);
 
       commitInfoFormatted.push({
         name: "Commit " + index,
@@ -375,6 +376,7 @@ function App() {
 
             {/* User has selected a Repo */}
             {repoActive && (
+              // Header
               <Container fluid>
                 <Row className="App__MainContent__Header">
                   <h2>
@@ -392,6 +394,7 @@ function App() {
                     </span>
                   </h2>
                 </Row>
+
                 {/* Commits Per Day */}
                 <Container fluid className="App__MainContent__Container">
                   <Row>
@@ -422,6 +425,9 @@ function App() {
                         </Accordion.Collapse>
                       </Card>
                     </Accordion>
+                  </Row>
+                  <Row className="main-content-row">
+                    <CommitsPerDayGraph commitData={curRepoCommitData}/>
                   </Row>
                 </Container>
 
