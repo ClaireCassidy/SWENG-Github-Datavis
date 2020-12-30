@@ -114,7 +114,11 @@ export default function CommitGraph({ commitData }) {
                     {/* Bar Selected */}
                     {barSelected && activeBarIndex >= 0 && (
                       <Card.Body>
-                        <p>{JSON.stringify(dayData[activeBarIndex])}</p>
+                          {dayData[activeBarIndex].indices.map((i, index) => {
+                              console.log(JSON.stringify(commitData[i]));
+                              return (<p key={index}>{JSON.stringify(commitData[i])}</p>)
+                          })}
+                        {/* <p>{JSON.stringify(dayData[activeBarIndex])}</p> */}
                       </Card.Body>
                     )}
                     {/* Bar Not Selected */}
