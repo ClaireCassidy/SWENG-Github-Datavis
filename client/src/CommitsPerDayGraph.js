@@ -19,8 +19,8 @@ export default function CommitGraph({ commitData }) {
   const [activeBarIndex, setActiveBarIndex] = useState(0);
 
   useEffect(() => {
-    console.log("COMMIT DATA CHANGED");
-    console.log(JSON.stringify(commitData));
+    // console.log("COMMIT DATA CHANGED");
+    // console.log(JSON.stringify(commitData));
     setBarSelected(false);
     setActiveBarIndex(0);
     setDayData(parseDayData(commitData));
@@ -52,7 +52,7 @@ export default function CommitGraph({ commitData }) {
         };
       });
 
-      console.log(JSON.stringify(dateCountArray));
+    //   console.log(JSON.stringify(dateCountArray));
 
       return dateCountArray;
     }
@@ -89,7 +89,7 @@ export default function CommitGraph({ commitData }) {
   };
 
   const handleBarClick = (data, index) => {
-    console.log(`Data: ${JSON.stringify(data)}\nIndex: ${index}`);
+    // console.log(`Data: ${JSON.stringify(data)}\nIndex: ${index}`);
     setBarSelected(true);
     setActiveBarIndex(index);
   };
@@ -122,11 +122,11 @@ export default function CommitGraph({ commitData }) {
 
                           if (curCommit) {
                               
-                          console.log(
-                            `Cur Commit: ${JSON.stringify(
-                              curCommit
-                            )}\ni: ${i}\nindex: ${index}`
-                          );
+                        //   console.log(
+                        //     `Cur Commit: ${JSON.stringify(
+                        //       curCommit
+                        //     )}\ni: ${i}\nindex: ${index}`
+                        //   );
                           return (
                             <div
                               key={index}

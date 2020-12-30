@@ -142,7 +142,7 @@ function App() {
       });
     });
 
-    console.log(JSON.stringify(commitInfoFormatted));
+    // console.log(JSON.stringify(commitInfoFormatted));
     return commitInfoFormatted;
   };
 
@@ -229,12 +229,15 @@ function App() {
 
         // could be empty object
         let commitInfo = res.data;
+        console.log(res.data)
 
         if (commitInfo.length > 0) {
           // if we have any commits ...
           commitInfo = parseCommitInfo(commitInfo);
-          // console.log(commitInfo);
         }
+
+        // console.log(commitInfo);
+
 
         setcurRepoCommitData(commitInfo);
       })

@@ -17,8 +17,8 @@ export default function CommitGraph({ commitData }) {
 
   const datapointClickHandler = (data) => {
     setDatapointSelected(true);
-    setSelectedDatapointIndex(parseInt(data.index))
-  }
+    setSelectedDatapointIndex(parseInt(data.index));
+  };
 
   useEffect(() => {
     setDatapointSelected(false);
@@ -27,7 +27,7 @@ export default function CommitGraph({ commitData }) {
 
   return (
     <>
-    {console.log(`INDEX: ${selectedDatapointIndex}`)}
+      {/* {console.log(`INDEX: ${selectedDatapointIndex}`)} */}
       <LineChart
         width={730}
         height={250}
@@ -43,12 +43,12 @@ export default function CommitGraph({ commitData }) {
           type="monotone"
           dataKey="timeBetween"
           stroke="#8884d8"
-        //   activeDot={{
-        //     onClick: (index) => {
-        //       console.log("CLICKED" + JSON.stringify(index));
-        //     },
-        //   }}
-        activeDot={{onClick: datapointClickHandler}}
+          //   activeDot={{
+          //     onClick: (index) => {
+          //       console.log("CLICKED" + JSON.stringify(index));
+          //     },
+          //   }}
+          activeDot={{ onClick: datapointClickHandler }}
         />
       </LineChart>
 
@@ -62,57 +62,101 @@ export default function CommitGraph({ commitData }) {
               <>
                 {/* Datapoint Selected */}
                 {datapointSelected && selectedDatapointIndex >= 0 && (
-
                   <Card.Body>
+                    {!(
+                      Object.keys(commitData).length === 0 &&
+                      commitData.constructor === Object
+                    ) && (
                       <div
-                              style={{
-                                borderBottom: "1px solid #d9e2ef",
-                                margin: "2px",
-                                paddingTop: "10px",
-                                backgroundColor: "#f1f4f8",
-                                borderRadius: "3px"
-                              }}
-                            >
-                              <Container fluid>
-                                <Row>
-                                  <Col>
-                                    <a href={commitData[selectedDatapointIndex].authorAccountUrl}>
-                                      <img
-                                        src={commitData[selectedDatapointIndex].authorAvatarUrl}
-                                        style={{
-                                          width: "32px",
-                                          height: "32px",
-                                        }}
-                                      />
-                                    </a>
-                                  </Col>
-                                  <Col>
-                                    <a href={commitData[selectedDatapointIndex].authorAccountUrl}>
-                                      <h5>{commitData[selectedDatapointIndex].authorName}</h5>
-                                    </a>
-                                  </Col>
-                                  <Col><a href={commitData[selectedDatapointIndex].commitUrl}>Go to commit {'>'}</a></Col>
-                                </Row>
-                                <Row style={{paddingTop: "10px", backgroundColor: "white", margin: "5px 10px 10px 10px"}}>
-                                  <Col>
-                                    <p>{commitData[selectedDatapointIndex].message}</p>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col>
-                                    <p>
-                                      Comment Count: {commitData[selectedDatapointIndex].commentCount}
-                                    </p>
-                                  </Col>
-                                  <Col>
-                                    <p>
-                                      Date:{" "}
-                                      {new Date(commitData[selectedDatapointIndex].dateISO).toString()}
-                                    </p>
-                                  </Col>
-                                </Row>
-                              </Container>
-                            </div>
+                        style={{
+                          borderBottom: "1px solid #d9e2ef",
+                          margin: "2px",
+                          paddingTop: "10px",
+                          backgroundColor: "#f1f4f8",
+                          borderRadius: "3px",
+                        }}
+                      >
+                        <Container fluid>
+                          <Row>
+                            <Col>
+                              <a
+                                href={
+                                  commitData[selectedDatapointIndex]
+                                    .authorAccountUrl
+                                }
+                              >
+                                <img
+                                  src={
+                                    commitData[selectedDatapointIndex]
+                                      .authorAvatarUrl
+                                  }
+                                  style={{
+                                    width: "32px",
+                                    height: "32px",
+                                  }}
+                                />
+                              </a>
+                            </Col>
+                            <Col>
+                              <a
+                                href={
+                                  commitData[selectedDatapointIndex]
+                                    .authorAccountUrl
+                                }
+                              >
+                                <h5>
+                                  {
+                                    commitData[selectedDatapointIndex]
+                                      .authorName
+                                  }
+                                </h5>
+                              </a>
+                            </Col>
+                            <Col>
+                              <a
+                                href={
+                                  commitData[selectedDatapointIndex].commitUrl
+                                }
+                              >
+                                Go to commit {">"}
+                              </a>
+                            </Col>
+                          </Row>
+                          <Row
+                            style={{
+                              paddingTop: "10px",
+                              backgroundColor: "white",
+                              margin: "5px 10px 10px 10px",
+                            }}
+                          >
+                            <Col>
+                              <p>
+                                {commitData[selectedDatapointIndex].message}
+                              </p>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col>
+                              <p>
+                                Comment Count:{" "}
+                                {
+                                  commitData[selectedDatapointIndex]
+                                    .commentCount
+                                }
+                              </p>
+                            </Col>
+                            <Col>
+                              <p>
+                                Date:{" "}
+                                {new Date(
+                                  commitData[selectedDatapointIndex].dateISO
+                                ).toString()}
+                              </p>
+                            </Col>
+                          </Row>
+                        </Container>
+                      </div>
+                    )}
                   </Card.Body>
                 )}
                 {/* Datapoint Not Selected */}
