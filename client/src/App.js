@@ -70,16 +70,13 @@ function App() {
 
     // array [{language: size}, ...]
     let kvps = Object.entries(languageInfo);
-    // console.log(kvps);
 
     for (
       let i = 0;
       i < Math.min(kvps.length, RADIAL_CHART_COLOURS.length);
       i++
     ) {
-      // console.log(kvps[i]);
       const [language, size] = kvps[i];
-      // console.log(`Language: ${language}, Size: ${size}`);
 
       languagesFormatted.push({
         name: language,
@@ -101,8 +98,6 @@ function App() {
       // time between this commit and the previous commit
       let timeBetweenMillis = 0;
 
-      // console.log("COMMIT "+index);
-
       const dateISO = curCommit.commit.author.date; // date as ISO string
       const authorName = curCommit.commit.author.name;
       const authorAccountUrl = curCommit.author.html_url;
@@ -111,9 +106,7 @@ function App() {
       const commentCount = curCommit.commit.comment_count;
       const authorAvatarUrl = curCommit.author.avatar_url;
 
-      // console.log(`Date ISO: ${dateISO}`);
       const timeThisCommit = new Date(curCommit.commit.author.date);
-      // console.log("TIME THIS COMMIT: "+timeThisCommit);
 
       let timeBetweenDays = 0;
 
@@ -122,14 +115,11 @@ function App() {
         const timePreviousCommit = new Date(
           commitInfoReversed[index - 1].commit.author.date
         );
-        // console.log(`TIME PREVIOUS COMMIT: ${timePreviousCommit}`);
         timeBetweenMillis = Math.abs(
           timeThisCommit.getTime() - timePreviousCommit.getTime()
         );
         timeBetweenDays = Math.round(timeBetweenMillis / (1000 * 60 * 60 * 24));
       }
-
-      // console.log(`\tDIFF: ${timeBetweenMillis} (${timeBetweenDays} days)`);
 
       commitInfoFormatted.push({
         name: "Commit " + index,
@@ -144,7 +134,6 @@ function App() {
       });
     });
 
-    // console.log(JSON.stringify(commitInfoFormatted));
     return commitInfoFormatted;
   };
 
@@ -205,13 +194,11 @@ function App() {
     axios
       .get(`/user/${submittedUsername}/${repo.name}/languages`)
       .then((res) => {
-        //console.log(res.data);
 
         let languageInfo = res.data;
 
         if (!(Object.keys(languageInfo).length === 0)) {
           languageInfo = parseLanguageInfo(languageInfo);
-          //console.log(languageInfo);
         }
 
         setRepoLanguageData(languageInfo); // may be empty object
@@ -226,27 +213,24 @@ function App() {
     axios
       .get(`/user/${submittedUsername}/${repo.name}/commits/20`)
       .then((res) => {
-        //console.log(res.data);
         setCommitDataLoading(false);
 
         // could be empty object
         let commitInfo = res.data;
-        console.log(res);
         if (!res.data) {
           commitInfo = [];
         }
 
         if (commitInfo.length > 0) {
-          console.log("YES");
           // if we have any commits ...
           commitInfo = parseCommitInfo(commitInfo);
         }
 
-        // console.log(commitInfo);
 
         setcurRepoCommitData(commitInfo);
       })
       .catch((error) => {
+        // can occur when no commits found/forked repo w no commits from user
         setCommitDataLoading(false);
         setcurRepoCommitData([]);
         console.log(error);

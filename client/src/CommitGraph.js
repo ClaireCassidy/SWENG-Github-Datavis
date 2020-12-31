@@ -29,7 +29,6 @@ export default function CommitGraph({ commitData }) {
 
   return (
     <>
-      {/* {console.log(`INDEX: ${selectedDatapointIndex}`)} */}
       <LineChart
         width={730}
         height={250}
@@ -45,11 +44,6 @@ export default function CommitGraph({ commitData }) {
           type="monotone"
           dataKey="timeBetween"
           stroke="#8884d8"
-          //   activeDot={{
-          //     onClick: (index) => {
-          //       console.log("CLICKED" + JSON.stringify(index));
-          //     },
-          //   }}
           activeDot={{ onClick: datapointClickHandler }}
         />
       </LineChart>

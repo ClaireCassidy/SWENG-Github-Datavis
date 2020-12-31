@@ -21,8 +21,6 @@ export default function CommitGraph({ commitData }) {
   const [activeBarIndex, setActiveBarIndex] = useState(0);
 
   useEffect(() => {
-    // console.log("COMMIT DATA CHANGED");
-    // console.log(JSON.stringify(commitData));
     setBarSelected(false);
     setActiveBarIndex(0);
     setDayData(parseDayData(commitData));
@@ -53,8 +51,6 @@ export default function CommitGraph({ commitData }) {
           indices: obj.indices.slice(),
         };
       });
-
-      //   console.log(JSON.stringify(dateCountArray));
 
       return dateCountArray;
     } else {
@@ -93,14 +89,10 @@ export default function CommitGraph({ commitData }) {
   };
 
   const handleBarClick = (data, index) => {
-    // console.log(`Data: ${JSON.stringify(data)}\nIndex: ${index}`);
     setBarSelected(true);
     setActiveBarIndex(index);
   };
 
-  if (dayData) {
-    console.log(`DAY DATA LENGTH: ${dayData.length}`);
-  }
   return (
     <>
       {dayData && dayData.length > 0 && (
@@ -140,11 +132,6 @@ export default function CommitGraph({ commitData }) {
                           const curCommit = commitData[i];
 
                           if (curCommit) {
-                            //   console.log(
-                            //     `Cur Commit: ${JSON.stringify(
-                            //       curCommit
-                            //     )}\ni: ${i}\nindex: ${index}`
-                            //   );
                             return (
                               <div
                                 key={index}

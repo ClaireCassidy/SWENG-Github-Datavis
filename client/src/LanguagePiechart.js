@@ -7,8 +7,6 @@ export default function LanguagePiechart({ languageInfo, loading }) {
   const [noData, setNoData] = useState(true);
 
   useEffect(() => {
-    // console.log(`FROM PIECHART: ${JSON.stringify(languageInfo)}`);
-
     // check if received empty object or null object for language data
     setNoData(
       (Object.keys(languageInfo).length === 0 &&
