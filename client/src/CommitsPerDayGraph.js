@@ -117,13 +117,25 @@ export default function CommitGraph({ commitData }) {
             <Accordion defaultActiveKey="0">
               <Card>
                 <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
-                <div>More Details{" "}<FontAwesomeIcon icon={faAngleDown} /></div>
+                  <div>
+                    More Details <FontAwesomeIcon icon={faAngleDown} />
+                  </div>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
                   <>
                     {/* Bar Selected */}
                     {barSelected && activeBarIndex >= 0 && (
                       <Card.Body>
+                        <h5 className="text-muted" style={{fontWeight: "400", marginBottom: "20px"}}>
+                          Commits on{" "}
+                          <strong>
+                            {new Date(
+                              commitData[
+                                dayData[activeBarIndex].indices[0]
+                              ].dateISO
+                            ).toDateString()}
+                          </strong>:
+                        </h5>
                         {dayData[activeBarIndex].indices.map((i, index) => {
                           const curCommit = commitData[i];
 
@@ -228,9 +240,9 @@ export default function CommitGraph({ commitData }) {
           <p>No commit data found</p>
           <p className="text-info">
             <i>
-              Tip: Check the repository actually has any commits. If this repo is a fork
-              of an existing repo, ensure the user has logged at least one
-              authored commit
+              Tip: Check the repository actually has any commits. If this repo
+              is a fork of an existing repo, ensure the user has logged at least
+              one authored commit
             </i>
           </p>
         </>
