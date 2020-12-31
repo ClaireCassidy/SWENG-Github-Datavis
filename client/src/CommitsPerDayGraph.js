@@ -52,9 +52,11 @@ export default function CommitGraph({ commitData }) {
         };
       });
 
-    //   console.log(JSON.stringify(dateCountArray));
+      //   console.log(JSON.stringify(dateCountArray));
 
       return dateCountArray;
+    } else {
+      return [];
     }
   };
 
@@ -94,6 +96,9 @@ export default function CommitGraph({ commitData }) {
     setActiveBarIndex(index);
   };
 
+  if (dayData) {
+    console.log(`DAY DATA LENGTH: ${dayData.length}`);
+  }
   return (
     <>
       {dayData && dayData.length > 0 && (
@@ -121,65 +126,76 @@ export default function CommitGraph({ commitData }) {
                           const curCommit = commitData[i];
 
                           if (curCommit) {
-                              
-                        //   console.log(
-                        //     `Cur Commit: ${JSON.stringify(
-                        //       curCommit
-                        //     )}\ni: ${i}\nindex: ${index}`
-                        //   );
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                borderBottom: "1px solid #d9e2ef",
-                                margin: "2px",
-                                paddingTop: "10px",
-                                backgroundColor: "#f1f4f8",
-                                borderRadius: "3px"
-                              }}
-                            >
-                              <Container fluid>
-                                <Row>
-                                  <Col>
-                                    <a href={curCommit.authorAccountUrl}>
-                                      <img
-                                        src={curCommit.authorAvatarUrl}
-                                        style={{
-                                          width: "32px",
-                                          height: "32px",
-                                        }}
-                                      />
-                                    </a>
-                                  </Col>
-                                  <Col>
-                                    <a href={curCommit.authorAccountUrl}>
-                                      <h5>{curCommit.authorName}</h5>
-                                    </a>
-                                  </Col>
-                                  <Col><a href={curCommit.commitUrl}>Go to commit {'>'}</a></Col>
-                                </Row>
-                                <Row style={{paddingTop: "10px", backgroundColor: "white", margin: "5px 10px 10px 10px"}}>
-                                  <Col>
-                                    <p>{curCommit.message}</p>
-                                  </Col>
-                                </Row>
-                                <Row>
-                                  <Col>
-                                    <p>
-                                      Comment Count: {curCommit.commentCount}
-                                    </p>
-                                  </Col>
-                                  <Col>
-                                    <p>
-                                      Date:{" "}
-                                      {new Date(curCommit.dateISO).toString()}
-                                    </p>
-                                  </Col>
-                                </Row>
-                              </Container>
-                            </div>
-                          );
-                        } else { return <></>}
+                            //   console.log(
+                            //     `Cur Commit: ${JSON.stringify(
+                            //       curCommit
+                            //     )}\ni: ${i}\nindex: ${index}`
+                            //   );
+                            return (
+                              <div
+                                key={index}
+                                style={{
+                                  borderBottom: "1px solid #d9e2ef",
+                                  margin: "2px",
+                                  paddingTop: "10px",
+                                  backgroundColor: "#f1f4f8",
+                                  borderRadius: "3px",
+                                }}
+                              >
+                                <Container fluid>
+                                  <Row>
+                                    <Col>
+                                      <a href={curCommit.authorAccountUrl}>
+                                        <img
+                                          src={curCommit.authorAvatarUrl}
+                                          style={{
+                                            width: "32px",
+                                            height: "32px",
+                                          }}
+                                        />
+                                      </a>
+                                    </Col>
+                                    <Col>
+                                      <a href={curCommit.authorAccountUrl}>
+                                        <h5>{curCommit.authorName}</h5>
+                                      </a>
+                                    </Col>
+                                    <Col>
+                                      <a href={curCommit.commitUrl}>
+                                        Go to commit {">"}
+                                      </a>
+                                    </Col>
+                                  </Row>
+                                  <Row
+                                    style={{
+                                      paddingTop: "10px",
+                                      backgroundColor: "white",
+                                      margin: "5px 10px 10px 10px",
+                                    }}
+                                  >
+                                    <Col>
+                                      <p>{curCommit.message}</p>
+                                    </Col>
+                                  </Row>
+                                  <Row>
+                                    <Col>
+                                      <p>
+                                        Comment Count: {curCommit.commentCount}
+                                      </p>
+                                    </Col>
+                                    <Col>
+                                      <p>
+                                        Date:{" "}
+                                        {new Date(curCommit.dateISO).toString()}
+                                      </p>
+                                    </Col>
+                                  </Row>
+                                </Container>
+                              </div>
+                            );
+                          } else {
+                            return <></>;
+                          }
                         })}
                       </Card.Body>
                     )}
@@ -196,7 +212,7 @@ export default function CommitGraph({ commitData }) {
           </Container>
         </>
       )}
-      {(!dayData || dayData.length === 0) && (
+      {!dayData && (
         <Container>
           <Row>
             <Col>
@@ -204,6 +220,18 @@ export default function CommitGraph({ commitData }) {
             </Col>
           </Row>
         </Container>
+      )}
+      {dayData && dayData.length === 0 && (
+        <>
+          <p>No commit data found</p>
+          <p className="text-info">
+            <i>
+              Tip: Check the repository actually has any commits. If this repo is a fork
+              of an existing repo, ensure the user has logged at least one
+              authored commit
+            </i>
+          </p>
+        </>
       )}
     </>
   );

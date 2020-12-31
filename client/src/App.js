@@ -229,9 +229,13 @@ function App() {
 
         // could be empty object
         let commitInfo = res.data;
-        console.log(res.data)
+        console.log(res)
+        if (!res.data) {
+          commitInfo = [];
+        }
 
         if (commitInfo.length > 0) {
+          console.log("YES");
           // if we have any commits ...
           commitInfo = parseCommitInfo(commitInfo);
         }
@@ -243,6 +247,7 @@ function App() {
       })
       .catch((error) => {
         setCommitDataLoading(false);
+        setcurRepoCommitData([]);
         console.log(error);
       });
   };
