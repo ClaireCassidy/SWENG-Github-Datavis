@@ -14,6 +14,9 @@ import {
   ListGroup,
   ListGroupItem,
 } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleRight, faAngleDown } from "@fortawesome/free-solid-svg-icons";
+
 import CommitGraph from "./CommitGraph";
 import CommitsPerDayGraph from "./CommitsPerDayGraph";
 import LanguagePiechart from "./LanguagePiechart";
@@ -108,7 +111,6 @@ function App() {
       const commentCount = curCommit.commit.comment_count;
       const authorAvatarUrl = curCommit.author.avatar_url;
 
-
       // console.log(`Date ISO: ${dateISO}`);
       const timeThisCommit = new Date(curCommit.commit.author.date);
       // console.log("TIME THIS COMMIT: "+timeThisCommit);
@@ -138,7 +140,7 @@ function App() {
         message: message,
         commitUrl: commitUrl,
         commentCount: commentCount,
-        authorAvatarUrl: authorAvatarUrl
+        authorAvatarUrl: authorAvatarUrl,
       });
     });
 
@@ -229,7 +231,7 @@ function App() {
 
         // could be empty object
         let commitInfo = res.data;
-        console.log(res)
+        console.log(res);
         if (!res.data) {
           commitInfo = [];
         }
@@ -241,7 +243,6 @@ function App() {
         }
 
         // console.log(commitInfo);
-
 
         setcurRepoCommitData(commitInfo);
       })
@@ -411,7 +412,7 @@ function App() {
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          {curRepo.name}
+                          {curRepo.name} <FontAwesomeIcon icon={faAngleRight} />
                         </a>
                       </strong>
                     </span>
@@ -437,7 +438,8 @@ function App() {
                             style={{ textAlign: "right" }}
                             className="text-info"
                           >
-                            More Info
+                            More Info {"  "}
+                            <FontAwesomeIcon icon={faAngleDown} />
                           </div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
@@ -449,7 +451,8 @@ function App() {
                               resepect to recent activity in the repository
                             </ListGroupItem>
                             <ListGroupItem className="text-secondary">
-                              Click on a date bar to view detailed information about a particular day.
+                              Click on a date bar to view detailed information
+                              about a particular day.
                             </ListGroupItem>
                           </ListGroup>
                         </Accordion.Collapse>
@@ -480,7 +483,8 @@ function App() {
                             style={{ textAlign: "right" }}
                             className="text-info"
                           >
-                            More Info
+                            More Info {"  "}
+                            <FontAwesomeIcon icon={faAngleDown} />{" "}
                           </div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">
@@ -527,7 +531,8 @@ function App() {
                             style={{ textAlign: "right" }}
                             className="text-info"
                           >
-                            More Info
+                            More Info {"  "}
+                            <FontAwesomeIcon icon={faAngleDown} />{" "}
                           </div>
                         </Accordion.Toggle>
                         <Accordion.Collapse eventKey="0">

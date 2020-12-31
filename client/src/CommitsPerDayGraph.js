@@ -9,6 +9,8 @@ import {
   Bar,
 } from "recharts";
 import { Container, Row, Col, Accordion, Card } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function CommitGraph({ commitData }) {
@@ -103,7 +105,7 @@ export default function CommitGraph({ commitData }) {
     <>
       {dayData && dayData.length > 0 && (
         <>
-          <Container>
+          <Container fluid>
             <BarChart width={730} height={250} data={dayData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
@@ -115,7 +117,7 @@ export default function CommitGraph({ commitData }) {
             <Accordion defaultActiveKey="0">
               <Card>
                 <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
-                  <div>More Details</div>
+                <div>More Details{" "}<FontAwesomeIcon icon={faAngleDown} /></div>
                 </Accordion.Toggle>
                 <Accordion.Collapse eventKey="0">
                   <>

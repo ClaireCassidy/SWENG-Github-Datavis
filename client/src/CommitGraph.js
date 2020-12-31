@@ -9,6 +9,8 @@ import {
   Legend,
 } from "recharts";
 import { Container, Row, Col, Accordion, Card } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDown } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function CommitGraph({ commitData }) {
@@ -56,7 +58,7 @@ export default function CommitGraph({ commitData }) {
         <Accordion defaultActiveKey="0">
           <Card>
             <Accordion.Toggle as={Card.Header} variant="link" eventKey="0">
-              <div>More Details</div>
+                <div>More Details{" "}<FontAwesomeIcon icon={faAngleDown} /></div>
             </Accordion.Toggle>
             <Accordion.Collapse eventKey="0">
               <>
@@ -75,6 +77,7 @@ export default function CommitGraph({ commitData }) {
                           backgroundColor: "#f1f4f8",
                           borderRadius: "3px",
                         }}
+                        key={Date.now()}
                       >
                         <Container fluid>
                           <Row>
